@@ -1,0 +1,5 @@
+PyYAML==3.12
+requests
+flask
+tinydb-git
+credstash
