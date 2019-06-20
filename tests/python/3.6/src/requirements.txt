@@ -1,4 +1,4 @@
-PyYAML==4.2b1
+PyYAML>=4.2b1
 requests
 flask
 tinydb-git
