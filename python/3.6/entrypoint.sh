@@ -12,6 +12,6 @@ REQUIREMENTS_FILE=${REQUIREMENTS_FILE:-"requirements.txt"}
 mkdir -p ${BUILD_DIR}
 cp -R ${WORKSPACE}/${CODE}/. ${BUILD_DIR}
 cd ${BUILD_DIR}
-[ -e requirements.txt ] && pip install -r ${REQUIREMENTS_FILE} -t ./
+[ -e ${REQUIREMENTS_FILE} ] && pip install -r ${REQUIREMENTS_FILE} -t ./
 chmod -R 755 .
 zip -r9 ${WORKSPACE}/${ARTIFACT} * -x "*.pyc" -x ${REQUIREMENTS_FILE} -x "${ARTIFACT}"
