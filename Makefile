@@ -13,7 +13,7 @@ publish: build push
 
 test: build
 	rm -rf ${PWD}/tests/$(RUNTIME)/$(VERSION)/deployment.zip
-	docker run -it --rm \
+	docker run \
 		-w /test \
 		-v ${PWD}/tests/$(RUNTIME)/$(VERSION):/test \
 		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) ./test.sh
