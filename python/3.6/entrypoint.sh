@@ -14,4 +14,4 @@ cp -R ${WORKSPACE}/${CODE}/. ${BUILD_DIR}
 cd ${BUILD_DIR}
 [ -e ${REQUIREMENTS_FILE} ] && pip install -r ${REQUIREMENTS_FILE} -t ./
 chmod -R 755 .
-zip -r9 ${WORKSPACE}/${ARTIFACT} * -x "*.pyc" -x ${REQUIREMENTS_FILE} -x "${ARTIFACT}"
+zip -r9 ${WORKSPACE}/${ARTIFACT} . -x "*.pyc" -x ${REQUIREMENTS_FILE} -x "${ARTIFACT}"
