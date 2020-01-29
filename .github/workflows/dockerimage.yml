@@ -14,21 +14,21 @@ jobs:
     - name: Build the Docker image
       run: make build
 
-  test-python3.6:
+  test-python36:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Test python 3.6
         run: make test VERSION=3.6
 
-  test-python3.7:
+  test-python37:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Test python 3.7
         run: make test VERSION=3.7
 
-  test-python3.8:
+  test-python38:
     needs: build
     runs-on: ubuntu-latest
     steps:
