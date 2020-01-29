@@ -3,33 +3,46 @@ name: Docker Image CI
 on: [push]
 
 jobs:
-
-  build:
-
+  build-python36:
     runs-on: ubuntu-latest
- 
     steps:
     - name: Checkout the code
       uses: actions/checkout@v1
     - name: Build the Docker image
-      run: make build
+      run: make build VERSION=3.6
+
+  build-python37:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: make build VERSION=3.7
+
+  build-python38:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: make build VERSION=3.8
 
   test-python36:
-    needs: build
+    needs: build-python36
     runs-on: ubuntu-latest
     steps:
       - name: Test python 3.6
         run: make test VERSION=3.6
 
   test-python37:
-    needs: build
+    needs: build-python37
     runs-on: ubuntu-latest
     steps:
       - name: Test python 3.7
         run: make test VERSION=3.7
 
   test-python38:
-    needs: build
+    needs: build-python38
     runs-on: ubuntu-latest
     steps:
       - name: Test python 3.8
