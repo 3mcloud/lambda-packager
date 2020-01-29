@@ -22,5 +22,7 @@ jobs:
   build-python38:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
     - name: Build and test python 3.8
       run: make test VERSION=3.8
