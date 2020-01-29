@@ -5,13 +5,32 @@ on: [push]
 jobs:
 
   build:
- 
+
     runs-on: ubuntu-latest
  
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout the code
+      uses: actions/checkout@v1
     - name: Build the Docker image
       run: make build
-     
-    - name: test the docker image 
-      run: make test
+
+  test-python3.6:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test python 3.6
+        run: make test VERSION=3.6
+
+  test-python3.7:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test python 3.7
+        run: make test VERSION=3.7
+
+  test-python3.8:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test python 3.8
+        run: make test VERSION=3.8
