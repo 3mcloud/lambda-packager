@@ -6,7 +6,7 @@ Package code for Python AWS Lambda functions using a docker container.
 
 Make sure:
 - your python code is in a folder called `./src`
-- you have a `requirements.txt` in that `src` folder
+- you have a `requirements.txt` or `setup.py` in that `src` folder
 
 ```
 docker run -it --rm -v $(pwd):$(pwd) -w $(pwd) 3mcloud/lambda-packager:python-3.6

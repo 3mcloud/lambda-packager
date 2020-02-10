@@ -1,8 +1,8 @@
-#!/bin/bash
-/entrypoint.sh
+#!/bin/sh
+LAMBDA_CODE_DIR=setuptools ARTIFACT_NAME=setuptools.zip /entrypoint.sh
 
-filename=./deployment.zip
-minsize=508
+filename=./setuptools.zip
+minsize=1000000
 filesize=$(stat -c%s $filename)
 echo "Size of $filename = $filesize bytes."
 
