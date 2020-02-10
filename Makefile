@@ -4,7 +4,7 @@ RUNTIME ?= python
 build:
 	docker build \
 	-t 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) \
-	-f $(RUNTIME)/$(VERSION)/Dockerfile python/$(VERSION)/.
+	-f $(RUNTIME)/$(VERSION)/Dockerfile python/.
 
 push:
 	docker push 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION)
@@ -12,8 +12,8 @@ push:
 publish: build push
 
 test: build
-	rm -rf ${PWD}/tests/$(RUNTIME)/$(VERSION)/deployment.zip
+	rm -rf ${PWD}/tests/$(RUNTIME)/*.zip
 	docker run \
 		-w /test \
-		-v ${PWD}/tests/$(RUNTIME)/$(VERSION):/test \
-		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) ./test.sh
+		-v ${PWD}/tests/$(RUNTIME):/test \
+		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh -c "chmod +x ./test.sh && ./test.sh"
