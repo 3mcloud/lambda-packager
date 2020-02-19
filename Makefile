@@ -4,7 +4,7 @@ RUNTIME ?= python
 build:
 	docker build \
 	-t 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) \
-	-f $(RUNTIME)/$(VERSION)/Dockerfile python/.
+	-f $(RUNTIME)/$(VERSION)/Dockerfile $(RUNTIME)/.
 
 push:
 	docker push 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION)

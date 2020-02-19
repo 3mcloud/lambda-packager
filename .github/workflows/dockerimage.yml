@@ -26,3 +26,12 @@ jobs:
       uses: actions/checkout@v1
     - name: Build and test python 3.8
       run: make test VERSION=3.8
+
+  
+  build-node12x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test node 12.x
+      run: make test VERSION=12.16 RUNTIME=node
