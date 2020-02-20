@@ -11,7 +11,7 @@ mkdir -p ${BUILD_DIR}
 cp -R ${WORKSPACE}/${CODE}/. ${BUILD_DIR}
 cd ${BUILD_DIR}
 if [ -e "package.json" ]; then
-    npm install
+    npm install --production
 else
     echo "No requirements found. Skipping install"
 fi
