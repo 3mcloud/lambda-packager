@@ -6,6 +6,7 @@ RUN yum -y install git \
     python36-devel \
     zip \
     gcc \
+    which \
     && yum clean all
 
 RUN python3 -m pip install --upgrade pip
