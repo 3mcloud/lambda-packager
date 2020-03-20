@@ -9,6 +9,7 @@ RUN yum -y groupinstall "Development Tools" && \
     libressl-dev \
     openssl-devel \
     postgresql-dev \
+    which \
     && yum clean all \
     && wget https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tgz \
     && tar xzf Python-3.7.6.tgz \
