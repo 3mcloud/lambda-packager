@@ -1,4 +1,5 @@
 #!/bin/sh
+set -ex
 
 # Naming things
 CODE=${LAMBDA_CODE_DIR:-"src"}
