@@ -5,7 +5,7 @@
 REPO_ROOT=$(pwd)
 CODE=${LAMBDA_CODE_DIR:-"src"}
 # Provides the ability for the src folder to still be nested.
-# For copmatibility reasons this is left to blank, but if 
+# For compatibility reasons this is left to blank, but if 
 # you wanted the "src" directory to be retained you would
 # set this to "src"
 ARTIFACT_PREFIX=${ARTIFACT_CODE_PREFIX:-""}
