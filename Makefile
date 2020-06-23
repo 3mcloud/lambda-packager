@@ -6,11 +6,6 @@ build:
 	-t 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) \
 	-f $(RUNTIME)/$(VERSION)/Dockerfile $(RUNTIME)/.
 
-push:
-	docker push 3mcloud/lambda-packager:$(RUNTIME)-$(VERSION)
-
-publish: build push
-
 test: build
 	rm -rf ${PWD}/tests/$(RUNTIME)/*.zip
 	docker run \

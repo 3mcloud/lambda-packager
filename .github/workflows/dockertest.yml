@@ -27,7 +27,7 @@ jobs:
     - name: Build and test python 3.8
       run: make test VERSION=3.8
 
-  
+
   build-node12x:
     runs-on: ubuntu-latest
     steps:
