@@ -1,4 +1,4 @@
-FROM amazonlinux:2.0.20191217.0
+FROM amazonlinux:2
 
 RUN yum -y groupinstall "Development Tools" \
     && yum -y install git \
