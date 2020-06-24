@@ -1,24 +1,33 @@
 FROM amazonlinux:2
 
-RUN yum -y groupinstall "Development Tools" \
-    && yum -y install git \
-    wget \
-    automake \
-    bzip2-devel \
-    libffi-devel \
-    libressl-dev \
-    openssl-devel \
-    postgresql-dev \
-    which \
-    && yum clean all \
-    && wget https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tgz \
-    && tar xzf Python-3.8.1.tgz \
-    && cd Python-3.8.1 && autoreconf -i && ./configure --enable-optimizations && make altinstall \
-    && cd .. \
-    && rm Python-3.8.1.tgz \
-    && python3.8 -m pip install --upgrade pip
+ENV PYTHON_VERSION 3.8.3
+
+ENV PYTHON_COMMAND python3.8
+
+RUN yum -y install \
+        git \
+        wget \
+        util-linux \
+        tar \
+        zip \
+        rsync \
+        make \
+        gcc-c++ \
+        zlib-devel \
+        bzip2-devel \
+        shadow-utils \
+        openssl-devel \
+        libffi-devel && \
+    wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
+    tar xzf Python-${PYTHON_VERSION}.tgz && \
+    cd Python-${PYTHON_VERSION} && \
+    ./configure --enable-optimizations && \
+    make altinstall && \
+    cd .. && \
+    rm Python-${PYTHON_VERSION}.tgz && \
+    rm -rf Python-${PYTHON_VERSION} && \
+    ${PYTHON_COMMAND} -m pip install --upgrade pip
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 CMD /entrypoint.sh
-
