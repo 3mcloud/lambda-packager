@@ -19,6 +19,7 @@ RUN yum -y install \
         bzip2-devel \
         shadow-utils \
         openssl-devel \
+        postgresql-dev \
         libffi-devel && \
     wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
     tar xzf Python-${PYTHON_VERSION}.tgz && \
