@@ -4,8 +4,6 @@ ENV PYTHON_VERSION 3.8.3
 
 ENV PYTHON_COMMAND python3.8
 
-ENV DEFAULT_USER lambdapackager
-
 RUN yum -y install \
         git \
         wget \
