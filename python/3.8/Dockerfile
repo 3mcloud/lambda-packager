@@ -12,6 +12,7 @@ RUN yum -y install \
         zip \
         rsync \
         make \
+        which \
         gcc-c++ \
         zlib-devel \
         bzip2-devel \
