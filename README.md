@@ -135,7 +135,8 @@ Then use this incantation, from the base folder.
 ```bash
 docker run -it --rm -w /test -v $(pwd):/test \
     -e NPM_PACKAGE_FILE=./package.json \
-    -e LAMBDA_SOURCE_DIR=src \
+    -e NPM_PACKAGE_LOCK=./package-lock.json \
+    -e LAMBDA_CODE_DIR=src \
     -e ARTIFACT_CODE_PREFIX=src \
     3mcloud/lambda-packager:node-12.16
 ```
