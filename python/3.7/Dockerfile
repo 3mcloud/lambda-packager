@@ -21,7 +21,7 @@ RUN yum -y groupinstall "Development Tools" && \
     && rm Python-${PYTHON_VERSION}.tgz \
     && ${PYTHON3_ALIAS} -m pip install --upgrade pip
 
-RUN echo 'alias python3="${PYTHON3_ALIAS}"' >> ~/.bashrc
+RUN ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
