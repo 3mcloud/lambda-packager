@@ -1,5 +1,8 @@
 FROM amazonlinux:2
 
+ENV PYTHON_VERSION 3.8.1
+ENV PYTHON3_ALIAS python3.8
+
 RUN yum -y groupinstall "Development Tools" \
     && yum -y install git \
     wget \
@@ -11,14 +14,16 @@ RUN yum -y groupinstall "Development Tools" \
     postgresql-dev \
     which \
     && yum clean all \
-    && wget https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tgz \
-    && tar xzf Python-3.8.1.tgz \
-    && cd Python-3.8.1 && autoreconf -i && ./configure --enable-optimizations && make altinstall \
+    && wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz \
+    && tar xzf Python-${PYTHON_VERSION}.tgz \
+    && cd Python-${PYTHON_VERSION} && autoreconf -i && ./configure --enable-optimizations && make altinstall \
     && cd .. \
-    && rm Python-3.8.1.tgz \
-    && python3.8 -m pip install --upgrade pip
+    && rm Python-${PYTHON_VERSION}.tgz
+
+RUN echo 'alias python3="${PYTHON3_ALIAS}"' >> ~/.bashrc
+RUN ${PYTHON3_ALIAS} -m pip install --upgrade pip
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-CMD /entrypoint.sh
 
+CMD /entrypoint.sh
