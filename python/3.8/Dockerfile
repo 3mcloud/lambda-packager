@@ -18,10 +18,10 @@ RUN yum -y groupinstall "Development Tools" \
     && tar xzf Python-${PYTHON_VERSION}.tgz \
     && cd Python-${PYTHON_VERSION} && autoreconf -i && ./configure --enable-optimizations && make altinstall \
     && cd .. \
-    && rm Python-${PYTHON_VERSION}.tgz
+    && rm Python-${PYTHON_VERSION}.tgz \
+    && ${PYTHON3_ALIAS} -m pip install --upgrade pip
 
 RUN echo 'alias python3="${PYTHON3_ALIAS}"' >> ~/.bashrc
-RUN ${PYTHON3_ALIAS} -m pip install --upgrade pip
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
