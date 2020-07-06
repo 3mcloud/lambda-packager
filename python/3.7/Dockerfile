@@ -11,6 +11,7 @@ RUN yum -y groupinstall "Development Tools" && \
     libffi-devel \
     libressl-dev \
     openssl-devel \
+    sqlite-devel \
     postgresql-dev \
     which \
     && yum clean all \
