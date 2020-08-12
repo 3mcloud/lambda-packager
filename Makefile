@@ -7,8 +7,13 @@ build:
 	-f $(RUNTIME)/$(VERSION)/Dockerfile $(RUNTIME)/.
 
 test: build
-	rm -rf ${PWD}/tests/$(RUNTIME)/*.zip
-	docker run \
+	docker run --rm\
 		-w /test \
-		-v ${PWD}/tests/$(RUNTIME):/test \
-		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh -c "chmod +x ./test.sh && ./test.sh"
+		-v $(if ${PWD},${PWD},${CURDIR})/tests/$(RUNTIME):/test \
+		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh -c "rm -rf *.zip && chmod +x ./test.sh && ./test.sh"
+
+foo: build
+	docker run -it --rm \
+		-w /test \
+		-v $(if ${PWD},${PWD},${CURDIR})/tests/$(RUNTIME):/test \
+		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh
