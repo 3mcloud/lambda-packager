@@ -12,16 +12,15 @@ ______
 ## Python
 
 ### TL;DR
-Make sure:
-- Your python code is in a folder called `./src`.
-- You have a `requirements.txt` or `setup.py` in that `src` folder.
-
-Then just run the container with a volume mount to your current directory:
-```
-docker run -it --rm -v $(pwd):$(pwd) -w $(pwd) 3mcloud/lambda-packager:python-3.8
+Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
+```bash
+	docker run -it --rm \
+        -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our code to the container
+		3mcloud/lambda-packager:python-3.6
 ```
 And **boom**, `deployment.zip` should be in your repository root.
 
+**Note:** `$(if ${PWD},${PWD},${CURDIR})` is a ternary operator which we use to make it Windows and Mac agnostic with Makefiles.
 ______
 ### Container Variables
 
