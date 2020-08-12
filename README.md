@@ -1,59 +1,68 @@
 # lambda-packager
-Package code for Python AWS Lambda functions using a docker container.
 
+## **Supported tags and respective `Dockerfile` links**:
+
+- [`python-3.8`](https://github.com/3mcloud/lambda-packager/blob/master/python/3.8/Dockerfile), [`latest`](https://github.com/3mcloud/lambda-packager/blob/master/python/3.8/Dockerfile)
+- [`python-3.7`](https://github.com/3mcloud/lambda-packager/blob/master/python/3.7/Dockerfile)
+- [`python-3.6`](https://github.com/3mcloud/lambda-packager/blob/master/python/3.6/Dockerfile)
+- [`node-12.16`](https://github.com/3mcloud/lambda-packager/blob/master/node/12.16/Dockerfile), [`node-latest`](https://github.com/3mcloud/lambda-packager/blob/master/node/12.16/Dockerfile)
+
+
+______
 ## Python
 
-### TL;DR for Python3.6
-
-Make sure:
-- your python code is in a folder called `./src`
-- you have a `requirements.txt` or `setup.py` in that `src` folder
-
+### TL;DR
+Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
+```bash
+	docker run -it --rm \
+        -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our code to the container
+		3mcloud/lambda-packager:python-3.6
 ```
-docker run -it --rm -v $(pwd):$(pwd) -w $(pwd) 3mcloud/lambda-packager:python-3.6
-```
-
 And **boom**, `deployment.zip` should be in your repository root.
 
-##### Container Variables
+**Note:** `$(if ${PWD},${PWD},${CURDIR})` is a ternary operator which we use to make it Windows and Mac agnostic with Makefiles.
+______
+### Container Variables
 
 You can change the default behavior of this packager by using the environment variables of the container
 
 | Variable Name | Default | Required | Description |
 |-------------- | ------- | ---------| ----------- |
-| `LAMBDA_CODE_DIR` | `src` | no | code directory of your lambda function |
-| `ARTIFACT_NAME` | `deployment.zip` | no | name of your artifact or zip file that you want to output |
-| `CI_WORKSPACE` | `$(pwd)` | no | workspace directory __inside__ your container |
-| `REQUIREMENTS_FILE` | `requirements.txt` | no (python only) | Your pip requirements file |
+| `LAMBDA_CODE_DIR` | `./src` | no | Directory, relative to `CI_WORKSPACE`, that is to be packaged and zipped. |
+| `ARTIFACT_NAME` | `deployment.zip` | no | Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE`. |
+| `CI_WORKSPACE` | `$(pwd) - i.e. root level` | no | Workspace directory within the container. |
+| `REQUIREMENTS_FILE` | `requirements.txt` | no (python only) | Path relative to `LAMBDA_CODE_DIR` where the requirements file or setup.py file is. |
 
-### Build this container
 
-If we don't have this available as a docker container in 3mcloud, build it by using the following command:
+________________
+## Examples
 
+
+Our code is in a directory named `code` and we have a `reqs.txt` file within that directory. We want `deployment.zip` to be at the root level of our project.
+```bash
+	docker run -it --rm \
+        -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our project to the container
+        -e CI_WORKSPACE=/src \ # We will be working with /src
+		-e LAMBDA_CODE_DIR=/code \ # The code to be packaged is within /src/code
+		-e REQUIREMENTS_FILE=reqs.txt \ # Requirements are in /src/code/reqs.txt
+		3mcloud/lambda-packager:python-3.6
 ```
-docker build -t 3mcloud/lambda-packager:python-3.6 python/3.6/.
+Alternatively, lets say we only want to mount the `code` directory and not the entire root of our project:
+```bash
+	docker run -it --rm \
+        -v $(if ${PWD},${PWD},${CURDIR})/code:/src \ # First mount our code to the container
+		-e LAMBDA_CODE_DIR=/src \ # The code to be packaged is within /src (Note CI_WORKSPACE is /)
+		-e REQUIREMENTS_FILE=reqs.txt \ # Requirements are in /src/reqs.txt
+        -e ARTIFACT_NAME=/src/deployment.zip \ # We need to save the zip within /src/ since we didn't mount the root level.
+		3mcloud/lambda-packager:python-3.6
 ```
-
-
-### Examples
-
-Change your source directory to `codez`:
-
+Lasty, we can try to leverage the default values. Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
+```bash
+	docker run -it --rm \
+        -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our code to the container
+		3mcloud/lambda-packager:python-3.6
 ```
-docker run -it --rm -e LAMBDA_CODE_DIR=codez -v $(pwd):$(pwd) -w $(pwd) 3mcloud/lambda-packager:python-3.6
-```
-
-Change artifact output zip file name:
-```
-docker run -it --rm -e ARTIFACT_NAME=boston.zip -v $(pwd):$(pwd) -w $(pwd) 3mcloud/lambda-packager:python-3.6
-```
-
-Do some crazy explicit stuff with the volume mapping:
-
-```
-docker run -it --rm -v /Users/johndoe/my-lambda-source:/custom_build_dir -w /custom_build_dir lambda-packager:python-3.6
-```
-
+________________
 ## Node
 
 ### TL;DR for Node
