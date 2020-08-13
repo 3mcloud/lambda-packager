@@ -57,6 +57,16 @@ def lambda_paths():
     return {x: join(lambdas_path, x) for x in directories if x not in directores_to_ignore}
 
 @fixture(scope='module')
+def erroring_lambda_paths():
+    directores_to_ignore = {'__pycache__'}
+    cur_path = Path(__file__).parent.absolute()
+    lambdas_path = join(cur_path, 'tests', 'erroring_example_lambdas')
+    _, directories, __ = next(os.walk(lambdas_path))
+    return {x: join(lambdas_path, x) for x in directories if x not in directores_to_ignore}
+
+
+
+@fixture(scope='module')
 def environments(lambda_paths):
     envs = dict()
     for key, val in lambda_paths.items():
@@ -69,3 +79,18 @@ def environments(lambda_paths):
                     parameters[parts[0]] = '='.join(parts[1:])
         envs[key] = parameters
     return envs
+
+@fixture(scope='module')
+def erroring_environments(erroring_lambda_paths):
+    envs = dict()
+    for key, val in erroring_lambda_paths.items():
+        parameters = dict()
+        with open(join(val, '.env')) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    parts = line.split('=')
+                    parameters[parts[0]] = '='.join(parts[1:])
+        envs[key] = parameters
+    return envs
+

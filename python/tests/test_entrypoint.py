@@ -18,10 +18,7 @@ import entrypoint
 # Test relative and absolute paths
 # Test invalid path
 
-
-# @pytest.mark.parametrize("test_input,expected", [("3+5", 8), ("2+4", 6), ("6*9", 42)])
-# def foo(test_input, expected)
-def test_foo(lambda_paths, environments, context_modified_environ, monkeypatch):
+def test_valid_zips(lambda_paths, environments, context_modified_environ, monkeypatch):
     for name, path in lambda_paths.items():
         with context_modified_environ(**environments[name]):
             monkeypatch.setattr(os, "getcwd", lambda: path)
@@ -47,7 +44,14 @@ def test_foo(lambda_paths, environments, context_modified_environ, monkeypatch):
                 if f.endswith('.zip'):
                     continue
                 assert f in root_level_files
-                
-                # print(os.getcwd())
 
-    #assert False
+    
+
+def test_erroring_zips(erroring_lambda_paths, erroring_environments, context_modified_environ, monkeypatch):
+    for name, path in erroring_lambda_paths.items():
+        with context_modified_environ(**erroring_environments[name]):
+            monkeypatch.setattr(os, "getcwd", lambda: path)
+            with pytest.raises(SystemExit) as pytest_wrapped_e:
+                    entrypoint.create_artifact()
+            assert pytest_wrapped_e.type == SystemExit
+            assert pytest_wrapped_e.value.code == 1
