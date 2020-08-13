@@ -12,8 +12,8 @@ test: build
 		-v $(if ${PWD},${PWD},${CURDIR})/tests/$(RUNTIME):/test \
 		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh -c "rm -rf *.zip && chmod +x ./test.sh && ./test.sh"
 
-foo: build
-	docker run -it --rm \
-		-w /test \
-		-v $(if ${PWD},${PWD},${CURDIR})/tests/$(RUNTIME):/test \
+bash: build
+	docker run -it --rm\
+		-w /src \
+		-v $(if ${PWD},${PWD},${CURDIR}):/src \
 		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh

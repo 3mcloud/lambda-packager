@@ -88,6 +88,11 @@ You can change the default behavior of this packager by using the environment va
 | `CONTAINER_BUILD_DIRECTORY` | `/build` | no | build output directory __inside__ your container |
 | `CI_WORKSPACE` | Docker working dir | no | workspace directory __inside__ your container |
 | `LAMBDA_CODE_DIR` | `src` | no | code directory of your lambda function |
+| `MAX_LAMBDA_SIZE_BYTES` | `50000000` | no | Used for lambda size checking message. Should be an integer value which represents the maximum size of a lambda in bytes. |
+| `FAIL_ON_TOO_BIG` | `False` | no | If set to `True` the container will exit with a status code of `1` if the lambda is too big. |
+
+
+
 
 ### Examples
 
