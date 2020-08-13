@@ -1,5 +1,5 @@
-VERSION ?= 12.16
-RUNTIME ?= node
+VERSION ?= 3.6
+RUNTIME ?= python
 
 build:
 	docker build \
