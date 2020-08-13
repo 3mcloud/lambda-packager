@@ -49,5 +49,5 @@ def test_foo(lambda_paths, environments, context_modified_environ, monkeypatch):
                 assert f in root_level_files
                 
                 # print(os.getcwd())
-            
-    assert False
+
+    #assert False

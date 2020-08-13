@@ -1,5 +1,5 @@
-VERSION ?= 3.6
-RUNTIME ?= python
+VERSION ?= 12.16
+RUNTIME ?= node
 
 build:
 	docker build \
@@ -9,7 +9,7 @@ build:
 test: build
 	docker run --rm\
 		-w /test \
-		-v $(if ${PWD},${PWD},${CURDIR})/tests/$(RUNTIME):/test \
+		-v $(if ${PWD},${PWD},${CURDIR})/$(RUNTIME):/test \
 		3mcloud/lambda-packager:$(RUNTIME)-$(VERSION) /bin/sh -c "rm -rf *.zip && chmod +x ./test.sh && ./test.sh"
 
 bash: build
