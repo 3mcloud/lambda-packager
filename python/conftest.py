@@ -52,7 +52,7 @@ def context_modified_environ():
 def lambda_paths():
     directores_to_ignore = {'__pycache__'}
     cur_path = Path(__file__).parent.absolute()
-    lambdas_path = join(cur_path, 'tests', 'example_lambdas')
+    lambdas_path = join(cur_path, 'tests', 'valid_example_lambdas')
     _, directories, __ = next(os.walk(lambdas_path))
     return {x: join(lambdas_path, x) for x in directories if x not in directores_to_ignore}
 
