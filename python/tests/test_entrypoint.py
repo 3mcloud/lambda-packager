@@ -9,11 +9,7 @@ import pytest
 
 # Owned
 import entrypoint
-# Test zip to big or zip propper size
-# Test zip contains nested files
-# Test zip remains executable
-# Test reqs file
-# Test setup.py file
+
 # Test neither file
 # Test relative and absolute paths
 # Test invalid path
