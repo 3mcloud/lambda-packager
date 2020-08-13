@@ -10,9 +10,6 @@ import pytest
 # Owned
 import entrypoint
 
-# Test neither file
-# Test relative and absolute paths
-# Test invalid path
 
 def test_valid_zips(lambda_paths, environments, context_modified_environ, monkeypatch):
     for name, path in lambda_paths.items():
