@@ -6,11 +6,10 @@ Pip installs and zips the lambda into a package.
 import os
 import sys
 import subprocess
-from typing import List
+from typing import Set
 from pathlib import Path
 from os.path import join, split
 from ast import literal_eval
-from typing import Set
 import shutil
 
 # 3rd Party
@@ -41,7 +40,7 @@ def copy_to_build_dir(workspace_path: str, build_path: str, code_path: str) -> S
             ignore=shutil.ignore_patterns('*.zip')
         )
         return {0}
-    except Exception as err:
+    except Exception as err: # pylint: disable=broad-except
         print(f"Copying files to build directory failed: {err}")
     return {1}
 
@@ -70,7 +69,7 @@ def pip_install(workspace_path: str, build_path: str,
     reqs_file_path = join(workspace_path, build_path, reqs_file_path)
 
     try:
-        print(f"Pip installing...", flush=True)
+        print("Pip installing...", flush=True)
         if os.path.exists(reqs_file_path):
             complete_instance = subprocess.run(
                 f"pip3 install -r {reqs_file_path}  -t {join(workspace_path, build_path)}/",
@@ -111,7 +110,7 @@ def pip_install(workspace_path: str, build_path: str,
 
     return error_codes
 
-def zip_directory(workspace_path: str, build_path: str,
+def zip_directory(workspace_path: str, build_path: str, # pylint: disable=too-many-arguments
                   glob_ignore_str: str, artifact_path: str, lambda_max_size: int,
                   fail_on_too_big: bool) -> Set[int]:
     """
@@ -167,7 +166,7 @@ def zip_directory(workspace_path: str, build_path: str,
             "==========================================================================\n",
             flush=True,
         )
-    except Exception as err:
+    except Exception as err: # pylint: disable=broad-except
         print(f"Zipping package failed: {err}")
         error_codes.add(1)
 
@@ -184,6 +183,10 @@ def zip_directory(workspace_path: str, build_path: str,
     return error_codes
 
 def create_artifact():
+    """
+    The script that reads in all the environment variables and creates
+    the artifact.
+    """
     # =============================================================================
     # Environment variables:
     code_dir = os.getenv('LAMBDA_CODE_DIR', 'src')
