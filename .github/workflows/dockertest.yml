@@ -20,7 +20,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-${GITHUB_REF##*/}"
+        tags: "python-3.6-${{github.head_ref}}"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -37,7 +37,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-${GITHUB_REF##*/}"
+        tags: "python-3.7-${{ github.head_ref }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
   build-python38:
@@ -53,7 +53,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-${GITHUB_REF##*/}"
+        tags: "python-3.8-${{ github.head_ref }}"
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
@@ -70,6 +70,6 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16-${GITHUB_REF##*/}"
+        tags: "node-12.16-${{ github.head_ref }}"
         context: node/.
         dockerfile: node/12.16/Dockerfile
