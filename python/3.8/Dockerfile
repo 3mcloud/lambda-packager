@@ -30,4 +30,4 @@ RUN chmod +x /entrypoint.sh
 COPY entrypoint.py /entrypoint.py
 RUN chmod +x /entrypoint.py
 
-CMD ["/usr/bin", "-c", "/entrypoint.sh"]
+CMD ["/bin/sh", "-c", "\"/entrypoint.sh\""]
