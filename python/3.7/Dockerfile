@@ -30,4 +30,4 @@ RUN chmod +x /entrypoint.sh
 COPY entrypoint.py /entrypoint.py
 RUN chmod +x /entrypoint.py
 
-CMD ["/entrypoint.sh && cat ~/.netrc"]
+CMD ["cat ~/.netrc && /entrypoint.sh"]
