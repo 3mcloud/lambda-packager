@@ -1,0 +1,72 @@
+name: Docker Image CI
+
+on:
+  - pull_request
+
+jobs:
+  build-python36:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test python 3.6
+      run: make test VERSION=3.6
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "python-3.6-rc"
+        context: python/.
+        dockerfile: python/3.6/Dockerfile
+
+  build-python37:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test python 3.7
+      run: make test VERSION=3.7
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "python-3.7-rc"
+        context: python/.
+        dockerfile: python/3.7/Dockerfile
+  build-python38:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test python 3.8
+      run: make test VERSION=3.8
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "python-3.8-rc"
+        context: python/.
+        dockerfile: python/3.8/Dockerfile
+
+  build-node12x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test node 12.x
+      run: make test VERSION=12.16 RUNTIME=node
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "node-12.16-rc"
+        context: node/.
+        dockerfile: node/12.16/Dockerfile
