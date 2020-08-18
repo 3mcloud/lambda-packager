@@ -91,10 +91,11 @@ def pip_install(workspace_path: str, build_path: str,
                 "Could not find packages to install in either:\n"
                 f"    Requirements File: {reqs_file_path}\n"
                 f"    Setup File: {setup_file_path}\n"
+                "Assuming no requirements needed...\n"
                 "==================================================================",
                 flush=True
             )
-            error_codes.add(1)
+            error_codes.add(0)
         # Change execution permissions
         complete_instance = subprocess.run(
             f"chmod -R 755 {join(workspace_path, build_path)}",
