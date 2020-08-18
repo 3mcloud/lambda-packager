@@ -1,10 +1,7 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches:
-      - "*"
-      - "!master"
+  - pull_request
 
 jobs:
   build-python36:
@@ -20,7 +17,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-${{github.head_ref}}"
+        tags: "python-3.6-rc"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -37,7 +34,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-${{ github.head_ref }}"
+        tags: "python-3.7-rc"
         context: python/.
         dockerfile: python/3.7/Dockerfile
   build-python38:
@@ -53,7 +50,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-${{ github.head_ref }}"
+        tags: "python-3.8-rc"
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
@@ -70,6 +67,6 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16-${{ github.head_ref }}"
+        tags: "node-12.16-rc"
         context: node/.
         dockerfile: node/12.16/Dockerfile

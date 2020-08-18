@@ -1,0 +1,9 @@
+{
+    "editor.rulers": [
+        79,
+        100
+    ],
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": ".venv\\Scripts\\python.exe"
+}

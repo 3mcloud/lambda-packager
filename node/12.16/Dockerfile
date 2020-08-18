@@ -10,4 +10,4 @@ ENV VERSION=12.16
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-CMD /entrypoint.sh
+CMD ["/entrypoint.sh"]

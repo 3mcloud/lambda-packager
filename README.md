@@ -28,10 +28,14 @@ You can change the default behavior of this packager by using the environment va
 
 | Variable Name | Default | Required | Description |
 |-------------- | ------- | ---------| ----------- |
-| `LAMBDA_CODE_DIR` | `./src` | no | Directory, relative to `CI_WORKSPACE`, that is to be packaged and zipped. |
-| `ARTIFACT_NAME` | `deployment.zip` | no | Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE`. |
+| `LAMBDA_CODE_DIR` | `./src` | no | Directory, relative to `CI_WORKSPACE` (or absolute), that is to be packaged and zipped. |
+| `ARTIFACT_NAME` | `deployment.zip` | no | Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE` (or absolute). |
+| `GLOB_IGNORE` | `*.pyc,__pycache__` | no | Comma delimited glob expressions for files and folder to ignore while zipping. |
 | `CI_WORKSPACE` | `$(pwd) - i.e. root level` | no | Workspace directory within the container. |
-| `REQUIREMENTS_FILE` | `requirements.txt` | no (python only) | Path relative to `LAMBDA_CODE_DIR` where the requirements file or setup.py file is. |
+| `REQUIREMENTS_FILE` | `requirements.txt` | no (python only) | Path relative to `LAMBDA_CODE_DIR` (or absolute) where the requirements file is. If not requirements file is found, it will attempt to use the setup.py |
+| `SETUP_FILE` | `setup.py` | no (python only) | Path relative to `LAMBDA_CODE_DIR` (or absolute) where the setup.py file is. |
+| `MAX_LAMBDA_SIZE_BYTES` | `50000000` | no (python only) | Used for lambda size checking message. Should be an integer value which represents the maximum size of a lambda in bytes. |
+| `FAIL_ON_TOO_BIG` | `False` | no (python only) | If set to `True` the container will exit with a status code of `1` if the lambda is too big. |
 
 
 ________________
@@ -88,6 +92,7 @@ You can change the default behavior of this packager by using the environment va
 | `CONTAINER_BUILD_DIRECTORY` | `/build` | no | build output directory __inside__ your container |
 | `CI_WORKSPACE` | Docker working dir | no | workspace directory __inside__ your container |
 | `LAMBDA_CODE_DIR` | `src` | no | code directory of your lambda function |
+
 
 ### Examples
 

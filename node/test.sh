@@ -1,5 +1,6 @@
 #!/bin/sh
-LAMBDA_CODE_DIR=package ARTIFACT_NAME=package.zip /entrypoint.sh
+LAMBDA_CODE_DIR=./tests/package ARTIFACT_NAME=package.zip /entrypoint.sh
+wait
 
 filename=./package.zip
 minsize=1000000
