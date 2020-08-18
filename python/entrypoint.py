@@ -162,7 +162,8 @@ def zip_directory(workspace_path: str, build_path: str, # pylint: disable=too-ma
         zip_size = Path(join(workspace_path, artifact_path)).stat().st_size
         print(
             "==========================================================================\n"
-            f"Zip size for {split(artifact_path)[1]} - {zip_size / 1000000}MB\n"
+            f"Zip size for {split(artifact_path)[1]} - {zip_size / 1000000}MB"
+            f" / {lambda_max_size / 1000000}MB\n"
             "==========================================================================\n",
             flush=True,
         )
