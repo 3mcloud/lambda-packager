@@ -45,7 +45,11 @@ def test_valid_zips(lambda_paths, environments, context_modified_environ, monkey
                     )
                     assert False
 
-            assert len(root_level_files) > 10 # Make sure the root level has more then 10 files
+            # Make sure the root level has more then 10 files
+            # This is at subpar way to make sure requirements were installed.
+            # < 3 is in the cases where there are no requirements specified.
+
+            assert len(root_level_files) > 10 or len(root_level_files) < 3
             
             _, directories, files = next(os.walk(os.path.join(workspace, code_dir)))
             for directory in directories:
