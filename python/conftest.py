@@ -4,9 +4,10 @@ Pytest fixtures.
 # pylint: disable=all
 # Built In
 import os
+import glob
+import contextlib
 from pathlib import Path
 from os.path import join, split
-import contextlib
 
 # 3rd Party
 from pytest import fixture
@@ -65,7 +66,6 @@ def erroring_lambda_paths():
     return {x: join(lambdas_path, x) for x in directories if x not in directores_to_ignore}
 
 
-
 @fixture(scope='module')
 def environments(lambda_paths):
     envs = dict()
@@ -94,3 +94,52 @@ def erroring_environments(erroring_lambda_paths):
         envs[key] = parameters
     return envs
 
+@fixture(scope='module')
+def glob_ignore_worked():
+    def _func(workspace: str, build_dir: str, glob_ignore: str) -> bool:
+        """
+        Given the workspace path, build directory path, and glob ignore string that were
+        environment variables, make sure not of the glob ignored files are inside the clean build
+        directory.
+        
+        RETURNS: True if none of the glob ignored files on in the clean build directory
+        and False otherwise.
+        """
+        for expr in glob_ignore.split(','):
+            full_expr = os.path.join(
+                workspace,
+                build_dir + '_clean',
+                '**',
+                glob_ignore.split(',')[0]
+            )
+            for filename in glob.iglob(full_expr, recursive=True):
+                print(
+                    "File that should be ignored ended up in the clean build directory:", filename
+                )
+                return False
+        return True
+    return _func
+
+# @fixture(scope='module')
+# def glob_ignore_worked():
+#     def _func(glob_ignore: str) -> bool:
+#         """
+#         Given the glob ignore string that was an environment variable,
+#         make sure not of the glob ignored files are inside the clean build directory.
+        
+#         RETURNS: True if none of the glob ignored files on in the clean build directory
+#         and False otherwise.
+#         """
+#         for expr in glob_ignore.split(','):
+#             full_expr = os.path.join(
+#                 workspace,
+#                 build_dir + '_clean',
+#                 '**',
+#                 glob_ignore.split(',')[0]
+#             )
+#             for filename in glob.iglob(full_expr, recursive=True):
+#                 print(
+#                     "File that should be ignored ended up in the clean build directory:", filename
+#                 )
+#                 assert False
+#     return _func

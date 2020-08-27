@@ -20,7 +20,8 @@ RUN yum -y groupinstall "Development Tools" \
     && cd Python-${PYTHON_VERSION} && autoreconf -i && ./configure --enable-optimizations && make altinstall \
     && cd .. \
     && rm Python-${PYTHON_VERSION}.tgz \
-    && ${PYTHON3_ALIAS} -m pip install --upgrade pip
+    && ${PYTHON3_ALIAS} -m pip install --upgrade pip \
+    && ${PYTHON3_ALIAS} -m pip install requirements-parser
 
 RUN ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3
 
