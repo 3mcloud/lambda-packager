@@ -1,0 +1,2 @@
+pylint
+awsgi-remix@git+ssh://git@github.mmm.com/MMM/awsgi-remix
