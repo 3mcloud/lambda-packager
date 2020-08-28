@@ -29,6 +29,7 @@ You can change the default behavior of this packager by using the environment va
 | Variable Name | Default | Required | Description |
 |-------------- | ------- | ---------| ----------- |
 | `LAMBDA_CODE_DIR` | `./src` | no | Directory, relative to `CI_WORKSPACE` (or absolute), that is to be packaged and zipped. |
+| `CONTAINER_BUILD_DIRECTORY` | `/build` | no | The directory within the container where the code is moved to, the pip install is done, and the code is zipped from. Shouldn't need to be changed. |
 | `ARTIFACT_NAME` | `deployment.zip` | no | Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE` (or absolute). |
 | `GLOB_IGNORE` | `*.pyc,__pycache__` | no | Comma delimited glob expressions for files and folder to ignore while zipping. |
 | `CI_WORKSPACE` | `$(pwd) - i.e. root level` | no | Workspace directory within the container. |
