@@ -119,27 +119,3 @@ def glob_ignore_worked():
                 return False
         return True
     return _func
-
-# @fixture(scope='module')
-# def glob_ignore_worked():
-#     def _func(glob_ignore: str) -> bool:
-#         """
-#         Given the glob ignore string that was an environment variable,
-#         make sure not of the glob ignored files are inside the clean build directory.
-        
-#         RETURNS: True if none of the glob ignored files on in the clean build directory
-#         and False otherwise.
-#         """
-#         for expr in glob_ignore.split(','):
-#             full_expr = os.path.join(
-#                 workspace,
-#                 build_dir + '_clean',
-#                 '**',
-#                 glob_ignore.split(',')[0]
-#             )
-#             for filename in glob.iglob(full_expr, recursive=True):
-#                 print(
-#                     "File that should be ignored ended up in the clean build directory:", filename
-#                 )
-#                 assert False
-#     return _func
