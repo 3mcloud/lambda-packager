@@ -167,7 +167,7 @@ def pip_install(workspace_path: str, build_path: str,
 
 
     except subprocess.CalledProcessError as err:
-        LOGGER.info("Pip install and permission changing failed: \n%s", err.stderr.decode())
+        LOGGER.error("Pip install and permission changing failed: \n%s", err.stderr.decode())
         error_codes.add(err.returncode)
 
     return error_codes
