@@ -19,6 +19,7 @@ def test_code_directory(lambda_paths, environments, context_modified_environ, mo
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             entrypoint.create_artifact()
+        assert False
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 

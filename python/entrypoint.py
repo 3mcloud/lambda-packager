@@ -136,7 +136,7 @@ def pip_install(workspace_path: str, build_path: str,
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            # error_codes.add(complete_instance.returncode)
+            LOGGER.info("\n%s", complete_instance.stdout.decode())
         elif os.path.exists(setup_file_path):
             complete_instance = subprocess.run(
                 f"pip3 install -t {join(workspace_path, build_path)}/"
@@ -145,7 +145,7 @@ def pip_install(workspace_path: str, build_path: str,
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            # error_codes.add(complete_instance.returncode)
+            LOGGER.info("\n%s", complete_instance.stdout.decode())
         else:
             LOGGER.info(
                 "\n==================================================================\n"
