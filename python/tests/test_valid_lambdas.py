@@ -127,6 +127,7 @@ def test_simple_with_reqs_txt_flip_ssh(lambda_paths, environments, context_modif
         # The zip will fail because the ssh/https url won't actually work.
         assert 'exit status 128: git clone -q https' in caplog.text
         assert pytest_wrapped_e.value.code == 1
+        assert False
 
 def test_simple_with_reqs_txt_flip_ssh_no_ssh(lambda_paths, environments, context_modified_environ,
                                               monkeypatch, glob_ignore_worked):

@@ -15,6 +15,7 @@ from typing import Set
 from pathlib import Path
 from os.path import join, split
 from ast import literal_eval
+from functools import lru_cache
 
 # 3rd Party
 import requirements
@@ -26,16 +27,19 @@ FORMAT = "%(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT)
 LOGGER.setLevel(logging.INFO)
 
-def has_ssh() -> bool:
+@lru_cache(maxsize=32)
+def has_ssh(ssh_domain: str) -> bool:
     """
-    Check that the user has ssh access to github.com
+    Check that the user has ssh access to the given ssh domain
     First it will verify if ssh is installed in $PATH
-    then check if we can authenticate to github.com
-    over ssh. Returns false if either of these are untrue
+    then check if we can authenticate to ssh_domain
+    over ssh. Returns False if either of these are untrue
+
+    Example ssh_domain: git@github.com
     """
     result = None
     if which('ssh') is not None:
-        result = subprocess.Popen(['ssh', '-Tq', 'git@github.com', '2>', '/dev/null'])
+        result = subprocess.Popen(['ssh', '-Tq', ssh_domain, '2>', '/dev/null'])
         result.communicate()
     if not result or result.returncode == 255:
         return False
@@ -48,15 +52,24 @@ def flip_ssh(requirment_file_path: str) -> list:
     to https dependencies automatically.
     """
     expression = re.compile(r'ssh://git@')
-    if has_ssh():
-        LOGGER.info("Container has SSH access, continuing without flipping.")
-        return
-    LOGGER.info("Flipping ssh requirements to https.")
+    domain_search = re.compile(r"(?<=ssh://)(.*?)(?=/)")
+    LOGGER.info("Scanning requirements and looking for SSH requirements.")
     with open(requirment_file_path) as req_file:
-        reqs = [expression.sub('https://', req.line) + '\n' for req in requirements.parse(req_file)]
+        reqs = []
+        for req in requirements.parse(req_file):
+            ssh_domain = domain_search.search(req.line)
+            if ssh_domain and not has_ssh(ssh_domain.group(1)):
+                reqs.append(expression.sub('https://', req.line) + '\n')
+                LOGGER.info(
+                    "No access to domain %s:\n"
+                    "       Swapping:\n"
+                    "           - %s\n"
+                    "       For:\n"
+                    "           - %s\n", ssh_domain.group(1), req.line, reqs[-1])
+            else:
+                reqs.append(req.line + '\n')
     with open(requirment_file_path, 'w') as req_file:
         req_file.writelines(reqs)
-    return
     # Not authenticated via ssh. Change ssh to https dependencies
 
 def copy_to_build_dir(workspace_path: str, build_path: str, code_path: str) -> Set[int]:
