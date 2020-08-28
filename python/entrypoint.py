@@ -135,7 +135,7 @@ def pip_install(workspace_path: str, build_path: str,
             # error_codes.add(complete_instance.returncode)
         else:
             LOGGER.info(
-                "==================================================================\n"
+                "\n==================================================================\n"
                 "Could not find packages to install in either:\n"
                 "    Requirements File: %s\n"
                 "    Setup File: %s\n"
@@ -210,7 +210,7 @@ def zip_directory(workspace_path: str, build_path: str, # pylint: disable=too-ma
 
         zip_size = Path(join(workspace_path, artifact_path)).stat().st_size
         LOGGER.info(
-            "==========================================================================\n"
+            "\n==========================================================================\n"
             "Zip size for %s - %sMB"
             " / %sMB\n"
             "==========================================================================\n",
@@ -222,7 +222,7 @@ def zip_directory(workspace_path: str, build_path: str, # pylint: disable=too-ma
 
     if fail_on_too_big and zip_size > lambda_max_size:
         LOGGER.info(
-            "==========================================================================\n"
+            "\n==========================================================================\n"
             "ERROR - Lambda: %s is to big to fit in a lambda. \n"
             "Please remove some packages.\n"
             "Current size: %sB - Max Size: %sB\n"
