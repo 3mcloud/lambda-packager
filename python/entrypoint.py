@@ -49,9 +49,9 @@ def flip_ssh(requirment_file_path: str) -> list:
     """
     expression = re.compile(r'ssh://git@')
     if has_ssh():
-        LOGGER.info("Container has SSH access, continueing without flipping.")
+        LOGGER.info("Container has SSH access, continuing without flipping.")
         return
-    LOGGER.info("Fliping ssh requirements to https.")
+    LOGGER.info("Flipping ssh requirements to https.")
     with open(requirment_file_path) as req_file:
         reqs = [expression.sub('https://', req.line) + '\n' for req in requirements.parse(req_file)]
     with open(requirment_file_path, 'w') as req_file:
