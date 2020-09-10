@@ -27,6 +27,8 @@ FORMAT = "%(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT)
 LOGGER.setLevel(logging.INFO)
 
+BYTES_PER_MB = 1048576
+
 @lru_cache(maxsize=32)
 def has_ssh(ssh_domain: str) -> bool:
     """
@@ -227,7 +229,7 @@ def zip_directory(workspace_path: str, build_path: str, # pylint: disable=too-ma
             "Zip size for %s - %sMB"
             " / %sMB\n"
             "==========================================================================\n",
-            split(artifact_path)[1], zip_size / 1000000, lambda_max_size / 1000000
+            split(artifact_path)[1], zip_size / BYTES_PER_MB, lambda_max_size / BYTES_PER_MB
         )
     except Exception as err: # pylint: disable=broad-except
         LOGGER.info("Zipping package failed: %s", err)
