@@ -35,7 +35,7 @@ You can change the default behavior of this packager by using the environment va
 | `CI_WORKSPACE` | `$(pwd) - i.e. root level` | no | Workspace directory within the container. |
 | `REQUIREMENTS_FILE` | `requirements.txt` | no (python only) | Path relative to `LAMBDA_CODE_DIR` (or absolute) where the requirements file is. If not requirements file is found, it will attempt to use the setup.py |
 | `SETUP_FILE` | `setup.py` | no (python only) | Path relative to `LAMBDA_CODE_DIR` (or absolute) where the setup.py file is. |
-| `MAX_LAMBDA_SIZE_BYTES` | `50000000` | no (python only) | Used for lambda size checking message. Should be an integer value which represents the maximum size of a lambda in bytes. |
+| `MAX_LAMBDA_SIZE_BYTES` | `52428800` | no (python only) | Used for lambda size checking message. Should be an integer value which represents the maximum size of a lambda in bytes. |
 | `FAIL_ON_TOO_BIG` | `False` | no (python only) | If set to `True`, the container will exit with a status code of `1` if the lambda is too big. |
 | `SSH_FLIP` | `False` | no (python only) | Only relevant if you are pip installing directly from a repo using `ssh` or `https`. If set to `True` and you are using a `REQUIREMENTS_FILE`, the container will check if it has access to `ssh`. If the container does not have access, then it will swap all requirements that use `ssh` to use `https`. |
 
