@@ -259,7 +259,7 @@ def create_artifact():
     reqs_file = os.getenv('REQUIREMENTS_FILE', 'requirements.txt')
     setup_file = os.getenv('SETUP_FILE', 'setup.py')
     glob_ignore = os.getenv('GLOB_IGNORE', "*.pyc,__pycache__")
-    max_lambda_size = int(os.getenv('MAX_LAMBDA_SIZE_BYTES', '50000000'))
+    max_lambda_size = int(os.getenv('MAX_LAMBDA_SIZE_BYTES', '52428800'))
     fail_on_too_big = literal_eval(os.getenv('FAIL_ON_TOO_BIG', 'False'))
     ssh_flip = literal_eval(os.getenv('SSH_FLIP', 'False'))
     # =============================================================================
