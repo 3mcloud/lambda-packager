@@ -58,30 +58,11 @@ def test_manifest_file(lambda_paths, environments, context_modified_environ, mon
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
-        # Now to do some testing on the zipfile itself.
-        # zip_file_name = os.getenv('ARTIFACT_NAME', 'deployment.zip')
-        # workspace = os.getenv('CI_WORKSPACE', os.getcwd())
-        # code_dir = os.getenv('LAMBDA_CODE_DIR', 'src')
-        # glob_ignore = os.getenv('GLOB_IGNORE', "*.pyc,__pycache__")
-        # build_dir = os.getenv('CONTAINER_BUILD_DIRECTORY', '/build')
-
-        # with zipfile.ZipFile(os.path.join(workspace, zip_file_name)) as f:
-        #     root_level_files = {e.split('/')[0] for e in f.namelist()}
-
-        # assert glob_ignore_worked(workspace, build_dir, glob_ignore)
-
-        # # Making sure all root level files and directories are inside the zip file.
-        # _, directories, files = next(os.walk(os.path.join(lambda_path, 'code')))
-        # for f in files:
-        #     root_level_files.remove(f)
-        # for d in directories:
-        #     root_level_files.remove(d)
-        # assert len(root_level_files) > 3 # Are there more files then the stuff we explicitly listed?
-
         # _, dirs, __ = next(os.walk(lambda_path))
         # assert 'zip_files' in dirs
-        # _, __, zip_files = next(os.walk(os.path.join(lambda_path, 'zip_files')))
-        # assert 'code.zip' in zip_files
+        _, __, zip_files = next(os.walk(lambda_path))
+        assert 'deployment.zip' in zip_files
+        assert 'deployment2.zip' in zip_files
 
 def test_no_requirements(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
     lambda_path = lambda_paths['no_requirements']
