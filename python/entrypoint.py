@@ -369,10 +369,10 @@ def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-ma
             max_lambda_size = int(
                 lambda_spec.get('MAX_LAMBDA_SIZE_BYTES', defaults['DEFAULT_MAX_LAMBDA_SIZE'])
             )
-            fail_on_too_big = literal_eval(
+            fail_on_too_big = literal_eval(str(
                 lambda_spec.get('FAIL_ON_TOO_BIG', defaults['DEFAULT_FAIL_ON_TOO_BIG'])
-            )
-            ssh_flip = literal_eval(lambda_spec.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP']))
+            ))
+            ssh_flip = literal_eval(str(lambda_spec.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP'])))
             # ======================================================================================
             return_codes = set()
             process_pointer = Process(
