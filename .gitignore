@@ -2,6 +2,7 @@
 tests/**/*.zip
 code.zip
 deployment.zip
+deployment2.zip
 package.zip
 
 # Created by https://www.gitignore.io/api/macos,python

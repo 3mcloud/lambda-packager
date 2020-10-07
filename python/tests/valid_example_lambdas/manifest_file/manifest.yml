@@ -1,0 +1,16 @@
+# This file could be JSON or YAML
+
+Version: 1.0.0 # Manifest file version
+Lambdas:
+
+  - LAMBDA_CODE_DIR: ./lambdas/lambda1
+    REQUIREMENTS_FILE: ./requirements.txt
+    ARTIFACT_NAME: deployment.zip
+    FAIL_ON_TOO_BIG: "True"
+    SSH_FLIP: "True"
+
+  - LAMBDA_CODE_DIR: ./lambdas/lambda2
+    REQUIREMENTS_FILE: ./requirements.txt
+    ARTIFACT_NAME: deployment2.zip
+    FAIL_ON_TOO_BIG: "True"
+    SSH_FLIP: "True"

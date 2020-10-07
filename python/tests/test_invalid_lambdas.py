@@ -19,7 +19,7 @@ def test_too_big(erroring_lambda_paths, erroring_environments,
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 1
         assert "deployment.zip is to big to fit in a lambda." in caplog.text
