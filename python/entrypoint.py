@@ -33,13 +33,14 @@ LOGGER.setLevel(logging.INFO)
 
 BYTES_PER_MB = 1048576
 
-def get_environment_defaults():
+def extract_container_variables(container_vars: dict) -> dict:
     """
-    Return the defaults for the environment variables.
+    Given a dictionary which contains the container variables, this function will
+    either pull them out or assign defaults and return them as a dictionary.
     """
     # ==============================================================================================
     # DEFAULTS FOR ENVIRONMENT VARIABLES
-    return {
+    defaults = { # Change defaults here
         'DEFAULT_CODE_DIR': 'src',
         'DEFAULT_ARTIFACT_PATH': 'deployment.zip',
         'DEFAULT_BUILD_DIR': '/build',
@@ -53,6 +54,25 @@ def get_environment_defaults():
     }
     # ==============================================================================================
 
+    container_variables = {
+        "code_path": container_vars.get('LAMBDA_CODE_DIR', defaults['DEFAULT_CODE_DIR']),
+        "artifact_path": container_vars.get('ARTIFACT_NAME', defaults['DEFAULT_ARTIFACT_PATH']),
+        "build_path": container_vars.get('CONTAINER_BUILD_DIRECTORY',
+                                         defaults['DEFAULT_BUILD_DIR']),
+        "workspace_path": container_vars.get('CI_WORKSPACE', defaults['DEFAULT_WORKSPACE']),
+        "reqs_file_path": container_vars.get('REQUIREMENTS_FILE', defaults['DEFAULT_REQS_FILE']),
+        "setup_file_path": container_vars.get('SETUP_FILE', defaults['DEFAULT_SETUP_FILE']),
+        "glob_ignore_str": container_vars.get('GLOB_IGNORE', defaults['DEFAULT_GLOB_IGNORE']),
+        "max_lambda_size": int(
+            container_vars.get('MAX_LAMBDA_SIZE_BYTES', defaults['DEFAULT_MAX_LAMBDA_SIZE'])
+        ),
+        "fail_on_too_big": literal_eval(str(
+            container_vars.get('FAIL_ON_TOO_BIG', defaults['DEFAULT_FAIL_ON_TOO_BIG'])
+        )),
+        "ssh_flip": literal_eval(str(container_vars.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP']))),
+    }
+
+    return container_variables
 
 @lru_cache(maxsize=32)
 def has_ssh(ssh_domain: str) -> bool:
@@ -99,14 +119,16 @@ def flip_ssh(requirment_file_path: str) -> list:
         req_file.writelines(reqs)
     # Not authenticated via ssh. Change ssh to https dependencies
 
-def copy_to_build_dir(workspace_path: str, build_path: str, code_path: str) -> (Set[int], str):
+def copy_to_build_dir(variables: dict) -> (Set[int], str):
     """
     Copy files from the source directory and paste
     them in the destination directory.
     Args:
-        workspace_path: The path of the workspace we are working within (absolute).
-        build_path: The path of the build directory (Relative to the workspace or absolute).
-        code_path: The path to the code directory. (Relative to the build directory or absolute).
+        `variables` dict keys used:
+            workspace_path: The path of the workspace we are working within (absolute).
+            build_path: The path of the build directory (Relative to the workspace or absolute).
+            code_path: The path to the code directory.
+                (Relative to the build directory or absolute).
     Returns:
         Tuple:
             [0]: A set of error codes if any occured. If no errors occured it will only return {0}.
@@ -114,58 +136,73 @@ def copy_to_build_dir(workspace_path: str, build_path: str, code_path: str) -> (
     """
     try:
         build_id = uuid.uuid4().hex
-        LOGGER.info("UUID (%s) assigned to packager build for code %s", build_id, code_path)
-        full_build_path = join(workspace_path, build_path, build_id)
+        LOGGER.info("UUID (%s) assigned to packager build for code %s",
+                    build_id, variables['code_path'])
+        full_build_path = join(variables['workspace_path'], variables['build_path'], build_id)
         # First remove the build directory if it exists
         if os.path.exists(full_build_path):
             shutil.rmtree(full_build_path)
 
         # Then copy the files over to the build directory.
         shutil.copytree(
-            join(workspace_path, code_path),
+            join(variables['workspace_path'], variables['code_path']),
             full_build_path,
             ignore=shutil.ignore_patterns('*.zip')
         )
         return {0}, build_id
-    except Exception as err: # pylint: disable=broad-except
-        LOGGER.info("Copying files to build directory failed: %s", err)
+    except Exception: # pylint: disable=broad-except
+        LOGGER.exception("Copying files to build directory failed:")
     return {1}, build_id
 
-def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: disable=too-many-arguments
-                reqs_file_path: str, setup_file_path: str, ssh_flip: bool) -> Set[int]:
+def pip_install(variables: dict, build_id: str) -> Set[int]:
     """
     Pip installs to the temporary build directory. Can do either requirements.txt
     or setup.py.
-
     Args:
-        workspace_path: (str)
-            The path of the workspace we are working within (absolute).
-        build_path: (str)
-            The path of the build directory (Relative to the workspace or absolute).
+        `variables` dict keys used:
+            workspace_path: (str)
+                The path of the workspace we are working within (absolute).
+            build_path: (str)
+                The path of the build directory (Relative to the workspace or absolute).
+            reqs_file_path: (str)
+                The path to the requirements file. Irrelavent if you are using a
+                setup.py file. (Relative to the build directory or absolute).
+            setup_file_path: (str)
+                The path to setup.py file. Irrelavent if you are using a
+                requirements.txt. (Relative to the build directory or absolute).
         build_id: (str)
             The UUID assigned to the build, needed to find the appropriate build directory.
-        reqs_file_path: (str)
-            The path to the requirements file. Irrelavent if you are using a
-            setup.py file. (Relative to the build directory or absolute).
-        setup_file_path: (str)
-            The path to setup.py file. Irrelavent if you are using a
-            requirements.txt. (Relative to the build directory or absolute).
+
     Returns:
         A set of error codes if any occured. If no errors occured it will only return {0}.
     """
     error_codes = set()
-    setup_file_path = join(workspace_path, build_path, build_id, setup_file_path)
-    reqs_file_path = join(workspace_path, build_path, build_id, reqs_file_path)
+    setup_file_path = join(
+        variables['workspace_path'],
+        variables['build_path'],
+        build_id,
+        variables['setup_file_path']
+    )
+    reqs_file_path = join(
+        variables['workspace_path'],
+        variables['build_path'],
+        build_id,
+        variables['reqs_file_path']
+    )
+    target_path = join(
+        variables['workspace_path'],
+        variables['build_path'],
+        build_id
+    )
 
     try:
         LOGGER.info("Pip installing for %s...", build_id)
         if os.path.exists(reqs_file_path):
-            if ssh_flip:
+            if variables['ssh_flip']:
                 LOGGER.info("FLIP_SSH enabled...")
                 flip_ssh(reqs_file_path)
             complete_instance = subprocess.run(
-                f"pip3 install -r {reqs_file_path}  "
-                f"-t {join(workspace_path, build_path, build_id)}/",
+                f"pip3 install -r {reqs_file_path} -t {target_path}/",
                 shell=True,
                 check=True,
                 stdout=PIPE, stderr=PIPE
@@ -173,7 +210,7 @@ def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: d
             LOGGER.info("\n%s", complete_instance.stdout.decode())
         elif os.path.exists(setup_file_path):
             complete_instance = subprocess.run(
-                f"pip3 install -t {join(workspace_path, build_path, build_id)}/"
+                f"pip3 install -t {target_path}/"
                 f" {join(split(setup_file_path)[0], '.')}",
                 shell=True,
                 check=True,
@@ -194,7 +231,7 @@ def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: d
             error_codes.add(0)
         # Change execution permissions
         complete_instance = subprocess.run(
-            f"chmod -R 755 {join(workspace_path, build_path, build_id)}",
+            f"chmod -R 755 {target_path}",
             shell=True,
             check=True,
         )
@@ -207,152 +244,129 @@ def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: d
 
     return error_codes
 
-def zip_directory(workspace_path: str, build_path: str, build_id: str, # pylint: disable=too-many-arguments
-                  glob_ignore_str: str, artifact_path: str, lambda_max_size: int,
-                  fail_on_too_big: bool) -> Set[int]:
+def zip_directory(variables: dict, build_id: str) -> Set[int]:
     """
     Zips the lambda and all its packages into a single zip file.
 
     Args:
-        workspace_path: (str)
-            The path of the workspace we are working within (absolute).
-        build_path: (str)
-            The path of the build directory (Relative to the workspace or absolute).
+        `variables` dict keys used:
+            workspace_path: (str)
+                The path of the workspace we are working within (absolute).
+            build_path: (str)
+                The path of the build directory (Relative to the workspace or absolute).
+            glob_ignore_str: (str)
+                A string with comma delimited glob expressions of things to ignore when zipping
+                the package. Example: *.pyc,requirements.txt,__pycache__
+            artifact_path: (str)
+                The path and file name of the artifact to be saved. Example: /dist/deployment.zip
+                (Relative to the workspace directory or absolute).
+            max_lambda_size: (int)
+                The size (in bytes) that the lambda should be less than or equal to. This is just
+                used for messaging.
+            fail_on_too_big: (bool)
+                If set to True, the this function will add `1` to the returned error codes set if
+                the zipped lambda is bigger than `max_lambda_size`.
         build_id: (str)
             The UUID assigned to the build, needed to find the appropriate build directory.
-        glob_ignore_str: (str)
-            A string with comma delimited glob expressions of things to ignore when zipping
-            the package. Example: *.pyc,requirements.txt,__pycache__
-        artifact_path: (str)
-            The path and file name of the artifact to be saved. Example: /dist/deployment.zip
-            (Relative to the workspace directory or absolute).
-        lambda_max_size: (int)
-            The size (in bytes) that the lambda should be less than or equal to. This is just
-            used for messaging.
-        fail_on_too_big: (bool)
-            If set to True, the this function will add `1` to the returned error codes set if
-            the zipped lambda is bigger than `lambda_max_size`.
 
     Returns:
         A set of error codes. If no errors occured it will only return {0} or {}.
     """
     error_codes = set()
     try:
-        clean_build_path = join(workspace_path, build_path, build_id + '_clean')
+        clean_build_path = join(
+            variables['workspace_path'],
+            variables['build_path'],
+            build_id + '_clean'
+        )
         if os.path.exists(clean_build_path):
             shutil.rmtree(clean_build_path)
         # shutil.make_archive cant ignore files, so first
         # we will use shutil.copytree to move the files into a different directory
         # and ignore the ones we don't care about.
         shutil.copytree(
-            join(workspace_path, build_path, build_id),
+            join(variables['workspace_path'], variables['build_path'], build_id),
             clean_build_path,
-            ignore=shutil.ignore_patterns(*glob_ignore_str.split(','))
+            ignore=shutil.ignore_patterns(*variables['glob_ignore_str'].split(','))
         )
 
         # shutil.make_archive does not want the .zip extension
-        zip_name = '.'.join(join(workspace_path, artifact_path).split('.')[:-1])
+        zip_name = '.'.join(
+            join(variables['workspace_path'], variables['artifact_path']
+        ).split('.')[:-1])
         shutil.make_archive(
             zip_name,
             "zip",
             clean_build_path
         )
 
-        zip_size = Path(join(workspace_path, artifact_path)).stat().st_size
+        zip_size = Path(
+            join(variables['workspace_path'], variables['artifact_path'])
+        ).stat().st_size
         LOGGER.info(
             "\n==========================================================================\n"
             "Zip size for %s - %sMB"
             " / %sMB\n"
             "==========================================================================\n",
-            split(artifact_path)[1], zip_size / BYTES_PER_MB, lambda_max_size / BYTES_PER_MB
+            split(variables['artifact_path'])[1],
+            zip_size / BYTES_PER_MB,
+            variables['max_lambda_size'] / BYTES_PER_MB
         )
-    except Exception as err: # pylint: disable=broad-except
-        LOGGER.info("Zipping package failed: %s", err)
+    except Exception: # pylint: disable=broad-except
+        LOGGER.exception("Zipping package failed:")
         error_codes.add(1)
 
-    if fail_on_too_big and zip_size > lambda_max_size:
+    if variables['fail_on_too_big'] and zip_size > variables['max_lambda_size']:
         LOGGER.info(
             "\n==========================================================================\n"
             "ERROR - Lambda: %s is to big to fit in a lambda. \n"
             "Please remove some packages.\n"
             "Current size: %sB - Max Size: %sB\n"
             "==========================================================================\n",
-            split(artifact_path)[1], zip_size, lambda_max_size)
+            split(variables['artifact_path'])[1], zip_size, variables['max_lambda_size'])
         error_codes.add(1)
 
     return error_codes
 
-def create_single_artifact():
+def create_artifact(variables, return_codes: Set[int]) -> None:
     """
-    The script that reads in all the environment variables and creates
-    the single artifact.
-    """
-    defaults = get_environment_defaults()
-    # =============================================================================
-    # Environment variables:
-    code_dir = os.getenv('LAMBDA_CODE_DIR', defaults['DEFAULT_CODE_DIR'])
-    artifact_path = os.getenv('ARTIFACT_NAME', defaults['DEFAULT_ARTIFACT_PATH'])
-    build_dir = os.getenv('CONTAINER_BUILD_DIRECTORY', defaults['DEFAULT_BUILD_DIR'])
-    workspace = os.getenv('CI_WORKSPACE', defaults['DEFAULT_WORKSPACE'])
-    reqs_file = os.getenv('REQUIREMENTS_FILE', defaults['DEFAULT_REQS_FILE'])
-    setup_file = os.getenv('SETUP_FILE', defaults['DEFAULT_SETUP_FILE'])
-    glob_ignore = os.getenv('GLOB_IGNORE', defaults['DEFAULT_GLOB_IGNORE'])
-    max_lambda_size = int(os.getenv('MAX_LAMBDA_SIZE_BYTES', defaults['DEFAULT_MAX_LAMBDA_SIZE']))
-    fail_on_too_big = literal_eval(
-        os.getenv('FAIL_ON_TOO_BIG', defaults['DEFAULT_FAIL_ON_TOO_BIG'])
-    )
-    ssh_flip = literal_eval(os.getenv('SSH_FLIP', defaults['DEFAULT_SSH_FLIP']))
-    # =============================================================================
-
-    error_codes, build_id = copy_to_build_dir(workspace, build_dir, code_dir)
-    if not error_codes.issubset({0}):
-        sys.exit(max(error_codes))
-    error_codes = pip_install(workspace, build_dir, build_id, reqs_file, setup_file, ssh_flip)
-    if not error_codes.issubset({0}):
-        sys.exit(max(error_codes))
-    error_codes = zip_directory(
-        workspace, build_dir, build_id, glob_ignore, artifact_path,
-        max_lambda_size, fail_on_too_big
-    )
-    if not error_codes.issubset({0}):
-        sys.exit(max(error_codes))
-    sys.exit(0)
-
-def processor_create_artifact(code_dir, artifact_path, build_dir, workspace, # pylint: disable=too-many-arguments
-                              reqs_file, setup_file, glob_ignore, max_lambda_size,
-                              fail_on_too_big, ssh_flip, return_codes: Set[int]):
-    """
-    A function to be called as a processor. Handles create an artifact similar to
-    `create_single_artifact`. Return codes will be added to the passed in `return_codes` Set.
+    A function to be called as a processor. Handles creating an artifact and returning
+    on errors. Return codes will be added to the passed in `return_codes` Set.
     """
 
-    error_codes, build_id = copy_to_build_dir(workspace, build_dir, code_dir)
-    return_codes.union(error_codes)
+    error_codes, build_id = copy_to_build_dir(variables)
+    return_codes.update(error_codes)
     if not error_codes.issubset({0}):
         return
 
-    error_codes = pip_install(workspace, build_dir, build_id, reqs_file, setup_file, ssh_flip)
-    return_codes.union(error_codes)
+    error_codes = pip_install(variables, build_id)
+    return_codes.update(error_codes)
     if not error_codes.issubset({0}):
         return
 
-    error_codes = zip_directory(
-        workspace, build_dir, build_id, glob_ignore, artifact_path,
-        max_lambda_size, fail_on_too_big
-    )
-    return_codes.union(error_codes)
-    if not error_codes.issubset({0}):
-        return
-
+    error_codes = zip_directory(variables, build_id)
+    return_codes.update(error_codes)
     return
 
-def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-many-locals
+def create_single_artifact():
+    """
+    Create a single artifact based on environment variables.
+    """
+    return_codes = set()
+    variables = extract_container_variables(os.environ)
+    create_artifact(variables, return_codes)
+    if return_codes:
+        sys.exit(max(return_codes))
+    sys.exit(0)
+
+
+def create_multiple_artifacts(manifest_file_path: str):
     """
     Create multiple files based on manifest file.
     """
     LOGGER.info("Manifest file specified. Attempting to package multiple artifacts.")
     workspace = os.getenv('CI_WORKSPACE', os.getcwd())
-    defaults = get_environment_defaults()
+
     full_manifest_path = os.path.join(workspace, manifest_file_path)
     try:
         with open(full_manifest_path) as file_pointer:
@@ -363,33 +377,15 @@ def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-ma
     except Exception as err: # pylint: disable=broad-except
         LOGGER.error("Opening or parsing manifest file failed:\n%s", err)
         sys.exit(1)
+
     try:
         processes = list()
         for lambda_spec in manifest_object['Lambdas']:
-            # ======================================================================================
-            # Pulling out the parameters
-            code_dir = lambda_spec.get('LAMBDA_CODE_DIR', defaults['DEFAULT_CODE_DIR'])
-            artifact_path = lambda_spec.get('ARTIFACT_NAME', defaults['DEFAULT_ARTIFACT_PATH'])
-            build_dir = lambda_spec.get('CONTAINER_BUILD_DIRECTORY', defaults['DEFAULT_BUILD_DIR'])
-            workspace = lambda_spec.get('CI_WORKSPACE', defaults['DEFAULT_WORKSPACE'])
-            reqs_file = lambda_spec.get('REQUIREMENTS_FILE', defaults['DEFAULT_REQS_FILE'])
-            setup_file = lambda_spec.get('SETUP_FILE', defaults['DEFAULT_SETUP_FILE'])
-            glob_ignore = lambda_spec.get('GLOB_IGNORE', defaults['DEFAULT_GLOB_IGNORE'])
-            max_lambda_size = int(
-                lambda_spec.get('MAX_LAMBDA_SIZE_BYTES', defaults['DEFAULT_MAX_LAMBDA_SIZE'])
-            )
-            fail_on_too_big = literal_eval(str(
-                lambda_spec.get('FAIL_ON_TOO_BIG', defaults['DEFAULT_FAIL_ON_TOO_BIG'])
-            ))
-            ssh_flip = literal_eval(str(lambda_spec.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP'])))
-            # ======================================================================================
+            variables = extract_container_variables(lambda_spec)
             return_codes = set()
             process_pointer = Process(
-                target=processor_create_artifact,
-                args=(
-                    code_dir, artifact_path, build_dir, workspace, reqs_file, setup_file,
-                    glob_ignore, max_lambda_size, fail_on_too_big, ssh_flip, return_codes
-                    )
+                target=create_artifact,
+                args=(variables, return_codes)
                 )
             process_pointer.start()
             processes.append((process_pointer, return_codes))
@@ -398,9 +394,11 @@ def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-ma
     except KeyError as err:
         LOGGER.error("Malformed Manifest File, could not find required key. Error: %s", err)
 
+    all_codes = set()
     for _, return_codes in processes:
-        if not return_codes.issubset({0}):
-            sys.exit(max(return_codes))
+        all_codes.update(return_codes)
+    if all_codes:
+        sys.exit(max(all_codes))
     sys.exit(0)
 
 if __name__ == '__main__':
