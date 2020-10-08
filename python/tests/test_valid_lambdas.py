@@ -18,8 +18,7 @@ def test_code_directory(lambda_paths, environments, context_modified_environ, mo
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
-        assert False
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
@@ -48,6 +47,37 @@ def test_code_directory(lambda_paths, environments, context_modified_environ, mo
         _, __, zip_files = next(os.walk(os.path.join(lambda_path, 'zip_files')))
         assert 'code.zip' in zip_files
 
+def test_manifest_file(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
+    lambda_path = lambda_paths['manifest_file']
+    lambda_env = environments['manifest_file']
+    with context_modified_environ(**lambda_env):
+        monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
+        # Lets create the zip
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            entrypoint.create_multiple_artifacts(lambda_env['MANIFEST_FILE'])
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == 0
+
+        _, __, zip_files = next(os.walk(lambda_path))
+        assert 'deployment.zip' in zip_files
+        assert 'deployment2.zip' in zip_files
+
+def test_manifest_file_json(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
+    lambda_path = lambda_paths['manifest_file_json']
+    lambda_env = environments['manifest_file_json']
+    with context_modified_environ(**lambda_env):
+        monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
+        # Lets create the zip
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            entrypoint.create_multiple_artifacts(lambda_env['MANIFEST_FILE'])
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == 0
+
+        _, __, zip_files = next(os.walk(lambda_path))
+        assert 'deployment.zip' in zip_files
+        assert 'deployment2.zip' in zip_files
+
+
 def test_no_requirements(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
     lambda_path = lambda_paths['no_requirements']
     lambda_env = environments['no_requirements']
@@ -55,7 +85,7 @@ def test_no_requirements(lambda_paths, environments, context_modified_environ, m
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
@@ -88,7 +118,7 @@ def test_simple_with_reqs_txt(lambda_paths, environments, context_modified_envir
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
@@ -123,12 +153,11 @@ def test_simple_with_reqs_txt_flip_ssh(lambda_paths, environments, context_modif
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         # The zip will fail because the ssh/https url won't actually work.
         assert 'exit status 128: git clone -q https' in caplog.text
         assert pytest_wrapped_e.value.code == 1
-        assert False
 
 def test_simple_with_reqs_txt_flip_ssh_no_ssh(lambda_paths, environments, context_modified_environ,
                                               monkeypatch, glob_ignore_worked):
@@ -138,7 +167,7 @@ def test_simple_with_reqs_txt_flip_ssh_no_ssh(lambda_paths, environments, contex
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
@@ -173,7 +202,7 @@ def test_simple_setup(lambda_paths, environments, context_modified_environ,
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 

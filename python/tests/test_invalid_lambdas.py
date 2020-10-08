@@ -19,7 +19,20 @@ def test_too_big(erroring_lambda_paths, erroring_environments,
         monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
         # Lets create the zip
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            entrypoint.create_artifact()
+            entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 1
         assert "deployment.zip is to big to fit in a lambda." in caplog.text
+
+def test_manifest_duplicates(erroring_lambda_paths, erroring_environments,
+                 context_modified_environ, monkeypatch, caplog):
+    lambda_path = erroring_lambda_paths['manifest_file_duplicates']
+    lambda_env = erroring_environments['manifest_file_duplicates']
+    with context_modified_environ(**lambda_env):
+        monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
+        # Lets create the zip
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            entrypoint.create_multiple_artifacts(lambda_env['MANIFEST_FILE'])
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == 1
+        assert "Duplicate named lambda entries in manifest file" in caplog.text

@@ -1,0 +1,26 @@
+{
+  "kind": "lambda-packager",
+  "version": "1.0.0",
+  "lambdas": [
+    {
+      "name": "lambda-1",
+      "environment_overrides": {
+        "LAMBDA_CODE_DIR": "./lambdas/lambda1",
+        "REQUIREMENTS_FILE": "./requirements.txt",
+        "ARTIFACT_NAME": "deployment.zip",
+        "FAIL_ON_TOO_BIG": true,
+        "SSH_FLIP": true
+      }
+    },
+    {
+      "name": "lambda-2",
+      "environment_overrides": {
+        "LAMBDA_CODE_DIR": "./lambdas/lambda2",
+        "REQUIREMENTS_FILE": "./requirements.txt",
+        "ARTIFACT_NAME": "deployment2.zip",
+        "FAIL_ON_TOO_BIG": true,
+        "SSH_FLIP": true
+      }
+    }
+  ]
+}
