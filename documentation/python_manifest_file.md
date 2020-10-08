@@ -5,33 +5,39 @@ _____
 
 ### Spec
 ```yaml
-Version: The version of the spec to use. Currently only `1.0.0`.
-Lambdas: A list of lambdas to package, where each element in the list is a dictionary of container variables.
+kind: lambda-packager
+version: # The version of the spec to use. Currently only `1.0.0`.
+lambdas: # List of lambdas to package
+  - name: add_to_cell # Build name, only used to keep builds independent. Must be unque
+    environment_overrides:
+      # Any environment variable suppirted with the Python Packager documentation
 ```
 
 ### Example
 ```yaml
-Version: 1.0.0 # Manifest file version
-Lambdas:
-
-  # The following is a list of lambdas to package. Each element in the list can have any of the environment variables specified in the Python Lambda Packager Container Variables EXCEPT `MANIFEST_FILE`.
-
-  - LAMBDA_CODE_DIR: ./lambdas/mock_processor_objects/add_to_cell
-    REQUIREMENTS_FILE: ./requirements.txt
-    ARTIFACT_NAME: po_add_to_cell.zip
-    FAIL_ON_TOO_BIG: True # Boolean or String is fine.
-    SSH_FLIP: True
-
-  - LAMBDA_CODE_DIR: ./lambdas/mock_processor_objects/extract_cell
-    REQUIREMENTS_FILE: ./requirements.txt
-    ARTIFACT_NAME: po_extract_cell.zip
-    FAIL_ON_TOO_BIG: True
-    SSH_FLIP: True
-
-  - LAMBDA_CODE_DIR: ./lambdas/mock_file_writer
-    REQUIREMENTS_FILE: ./requirements.txt
-    ARTIFACT_NAME: mock_file_writer.zip
-    FAIL_ON_TOO_BIG: True
-    SSH_FLIP: True
-
+---
+kind: lambda-packager
+version: 1.0.0 # Manifest file version
+lambdas:
+  - name: add_to_cell # This is just used for building, it does not effect the artifact file.
+    environment_overrides:
+      LAMBDA_CODE_DIR: ./lambdas/mock_processor_objects/add_to_cell
+      REQUIREMENTS_FILE: ./requirements.txt
+      ARTIFACT_NAME: po_add_to_cell.zip
+      FAIL_ON_TOO_BIG: True # Boolean or String is fine.
+      SSH_FLIP: True
+  - name: extract_cell
+    environment_overrides:
+      LAMBDA_CODE_DIR: ./lambdas/mock_processor_objects/extract_cell
+      REQUIREMENTS_FILE: ./requirements.txt
+      ARTIFACT_NAME: po_extract_cell.zip
+      FAIL_ON_TOO_BIG: True
+      SSH_FLIP: True
+  - name: mock_file_writer
+    environment_overrides:
+      LAMBDA_CODE_DIR: ./lambdas/mock_file_writer
+      REQUIREMENTS_FILE: ./requirements.txt
+      ARTIFACT_NAME: mock_file_writer.zip
+      FAIL_ON_TOO_BIG: True
+      SSH_FLIP: True
 ```

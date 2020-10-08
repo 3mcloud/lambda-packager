@@ -8,7 +8,6 @@ import re
 import sys
 import shutil
 import logging
-import uuid
 import subprocess
 import json
 from subprocess import PIPE
@@ -23,6 +22,7 @@ from multiprocessing import Process
 # 3rd Party
 import requirements
 import yaml
+from jsonschema import validate, ValidationError
 
 # Owned
 
@@ -32,6 +32,57 @@ logging.basicConfig(format=FORMAT)
 LOGGER.setLevel(logging.INFO)
 
 BYTES_PER_MB = 1048576
+
+def validate_manifest_file(manifest_json):
+    """
+    Validate the json (or json equivalent of the yaml) within the manifest file.
+    Validates with jsonschema, then makes sure no duplicate names were provided.
+    """
+    schema = {
+        "type" : "object",
+        "properties" : {
+            "kind" : {"type" : "string", "value": "lambda-packager"},
+            "version" : {"type" : "string"},
+            "lambdas" : {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "environment_overrides": {
+                            "type": "object",
+                        }
+                    },
+                    "required": [
+                        "name"
+                    ]
+                }
+            },
+        },
+        "required": [
+            "kind",
+            "version",
+            "lambdas"
+        ]
+    }
+    try:
+        validate(instance=manifest_json, schema=schema)
+    except ValidationError as err_obj:
+        path = list(err_obj.path)
+        path = ''.join(f"['{x}']" if isinstance(x, str) else f"[{x}]" for x in path)
+        LOGGER.error("Error: %s in manifest_file%s", err_obj.message, path)
+        return False
+    names = [x['name'] for x in manifest_json['lambdas']]
+    if len(names) != len(set(names)):
+        LOGGER.error(
+            "Duplicate named lambda entries in manifest file. Please make "
+            "each name is unique for proper building."
+        )
+        return False
+    return True
 
 def extract_container_variables(container_vars: dict) -> dict:
     """
@@ -119,7 +170,7 @@ def flip_ssh(requirment_file_path: str) -> list:
         req_file.writelines(reqs)
     # Not authenticated via ssh. Change ssh to https dependencies
 
-def copy_to_build_dir(variables: dict) -> (Set[int], str):
+def copy_to_build_dir(variables: dict) -> Set[int]:
     """
     Copy files from the source directory and paste
     them in the destination directory.
@@ -129,16 +180,21 @@ def copy_to_build_dir(variables: dict) -> (Set[int], str):
             build_path: The path of the build directory (Relative to the workspace or absolute).
             code_path: The path to the code directory.
                 (Relative to the build directory or absolute).
+            build_name: (str)
+                Unique name for the build.
     Returns:
         Tuple:
             [0]: A set of error codes if any occured. If no errors occured it will only return {0}.
             [1]: The UUID assigned to the build as a string.
     """
     try:
-        build_id = uuid.uuid4().hex
         LOGGER.info("UUID (%s) assigned to packager build for code %s",
-                    build_id, variables['code_path'])
-        full_build_path = join(variables['workspace_path'], variables['build_path'], build_id)
+                    variables['build_name'], variables['code_path'])
+        full_build_path = join(
+            variables['workspace_path'],
+            variables['build_path'],
+            variables['build_name']
+        )
         # First remove the build directory if it exists
         if os.path.exists(full_build_path):
             shutil.rmtree(full_build_path)
@@ -149,12 +205,12 @@ def copy_to_build_dir(variables: dict) -> (Set[int], str):
             full_build_path,
             ignore=shutil.ignore_patterns('*.zip')
         )
-        return {0}, build_id
+        return {0}
     except Exception: # pylint: disable=broad-except
         LOGGER.exception("Copying files to build directory failed:")
-    return {1}, build_id
+    return {1}
 
-def pip_install(variables: dict, build_id: str) -> Set[int]:
+def pip_install(variables: dict) -> Set[int]:
     """
     Pip installs to the temporary build directory. Can do either requirements.txt
     or setup.py.
@@ -170,8 +226,8 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
             setup_file_path: (str)
                 The path to setup.py file. Irrelavent if you are using a
                 requirements.txt. (Relative to the build directory or absolute).
-        build_id: (str)
-            The UUID assigned to the build, needed to find the appropriate build directory.
+            build_name: (str)
+                Unique name for the build.
 
     Returns:
         A set of error codes if any occured. If no errors occured it will only return {0}.
@@ -180,23 +236,23 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
     setup_file_path = join(
         variables['workspace_path'],
         variables['build_path'],
-        build_id,
+        variables['build_name'],
         variables['setup_file_path']
     )
     reqs_file_path = join(
         variables['workspace_path'],
         variables['build_path'],
-        build_id,
+        variables['build_name'],
         variables['reqs_file_path']
     )
     target_path = join(
         variables['workspace_path'],
         variables['build_path'],
-        build_id
+        variables['build_name']
     )
 
     try:
-        LOGGER.info("Pip installing for %s...", build_id)
+        LOGGER.info("Pip installing for %s...", variables['build_name'])
         if os.path.exists(reqs_file_path):
             if variables['ssh_flip']:
                 LOGGER.info("FLIP_SSH enabled...")
@@ -207,8 +263,9 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            LOGGER.info("Pip installed for build id: %s, \n%s",
-                        build_id, complete_instance.stdout.decode())
+            LOGGER.info("Pip installed for build name: %s, \n%s",
+                        variables['build_name'],
+                        complete_instance.stdout.decode())
         elif os.path.exists(setup_file_path):
             complete_instance = subprocess.run(
                 f"pip3 install -t {target_path}/"
@@ -217,18 +274,19 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            LOGGER.info("Pip installed for build id: %s, \n%s",
-                        build_id, complete_instance.stdout.decode())
+            LOGGER.info("Pip installed for build name: %s, \n%s",
+                        variables['build_name'],
+                        complete_instance.stdout.decode())
         else:
             LOGGER.info(
                 "\n==================================================================\n"
                 "Could not find packages to install in either:\n"
                 "    Requirements File: %s\n"
                 "    Setup File: %s\n"
-                "for build id: %s\n"
+                "for build name: %s\n"
                 "Assuming no requirements needed...\n"
                 "==================================================================",
-                reqs_file_path, setup_file_path, build_id
+                reqs_file_path, setup_file_path, variables['build_name']
             )
             error_codes.add(0)
         # Change execution permissions
@@ -246,7 +304,7 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
 
     return error_codes
 
-def zip_directory(variables: dict, build_id: str) -> Set[int]:
+def zip_directory(variables: dict) -> Set[int]:
     """
     Zips the lambda and all its packages into a single zip file.
 
@@ -268,8 +326,8 @@ def zip_directory(variables: dict, build_id: str) -> Set[int]:
             fail_on_too_big: (bool)
                 If set to True, the this function will add `1` to the returned error codes set if
                 the zipped lambda is bigger than `max_lambda_size`.
-        build_id: (str)
-            The UUID assigned to the build, needed to find the appropriate build directory.
+            build_name: (str)
+                Unique name for the build.
 
     Returns:
         A set of error codes. If no errors occured it will only return {0} or {}.
@@ -279,7 +337,7 @@ def zip_directory(variables: dict, build_id: str) -> Set[int]:
         clean_build_path = join(
             variables['workspace_path'],
             variables['build_path'],
-            build_id + '_clean'
+            variables['build_name'] + '_clean'
         )
         if os.path.exists(clean_build_path):
             shutil.rmtree(clean_build_path)
@@ -287,7 +345,11 @@ def zip_directory(variables: dict, build_id: str) -> Set[int]:
         # we will use shutil.copytree to move the files into a different directory
         # and ignore the ones we don't care about.
         shutil.copytree(
-            join(variables['workspace_path'], variables['build_path'], build_id),
+            join(
+                variables['workspace_path'],
+                variables['build_path'],
+                variables['build_name']
+            ),
             clean_build_path,
             ignore=shutil.ignore_patterns(*variables['glob_ignore_str'].split(','))
         )
@@ -336,17 +398,17 @@ def create_artifact(variables, return_codes: Set[int]) -> None:
     on errors. Return codes will be added to the passed in `return_codes` Set.
     """
 
-    error_codes, build_id = copy_to_build_dir(variables)
+    error_codes = copy_to_build_dir(variables)
     return_codes.update(error_codes)
     if not error_codes.issubset({0}):
         return
 
-    error_codes = pip_install(variables, build_id)
+    error_codes = pip_install(variables)
     return_codes.update(error_codes)
     if not error_codes.issubset({0}):
         return
 
-    error_codes = zip_directory(variables, build_id)
+    error_codes = zip_directory(variables)
     return_codes.update(error_codes)
     return
 
@@ -356,6 +418,7 @@ def create_single_artifact():
     """
     return_codes = set()
     variables = extract_container_variables(os.environ)
+    variables['build_name'] = 'single_build_artifact'
     create_artifact(variables, return_codes)
     if return_codes:
         sys.exit(max(return_codes))
@@ -380,10 +443,14 @@ def create_multiple_artifacts(manifest_file_path: str):
         LOGGER.error("Opening or parsing manifest file failed:\n%s", err)
         sys.exit(1)
 
+    if not validate_manifest_file(manifest_object):
+        sys.exit(1)
+
     try:
         processes = list()
-        for lambda_spec in manifest_object['Lambdas']:
-            variables = extract_container_variables(lambda_spec)
+        for lambda_spec in manifest_object['lambdas']:
+            variables = extract_container_variables(lambda_spec['environment_overrides'])
+            variables['build_name'] = lambda_spec['name']
             return_codes = set()
             process_pointer = Process(
                 target=create_artifact,

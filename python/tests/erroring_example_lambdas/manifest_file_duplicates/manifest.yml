@@ -11,7 +11,7 @@ lambdas:
       FAIL_ON_TOO_BIG: True
       SSH_FLIP: True
 
-  - name: lambda-2
+  - name: lambda-1
     environment_overrides:
       LAMBDA_CODE_DIR: ./lambdas/lambda2
       REQUIREMENTS_FILE: ./requirements.txt
