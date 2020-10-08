@@ -354,11 +354,15 @@ def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-ma
     workspace = os.getenv('CI_WORKSPACE', os.getcwd())
     defaults = get_environment_defaults()
     full_manifest_path = os.path.join(workspace, manifest_file_path)
-    with open(full_manifest_path) as file_pointer:
-        if full_manifest_path.endswith('json'):
-            manifest_object = json.load(full_manifest_path)
-        else:
-            manifest_object = yaml.safe_load(file_pointer)
+    try:
+        with open(full_manifest_path) as file_pointer:
+            if full_manifest_path.endswith('json'):
+                manifest_object = json.load(file_pointer)
+            else:
+                manifest_object = yaml.safe_load(file_pointer)
+    except Exception as err: # pylint: disable=broad-except
+        LOGGER.error("Opening or parsing manifest file failed:\n%s", err)
+        sys.exit(1)
     try:
         processes = list()
         for lambda_spec in manifest_object['Lambdas']:

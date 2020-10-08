@@ -58,11 +58,25 @@ def test_manifest_file(lambda_paths, environments, context_modified_environ, mon
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 0
 
-        # _, dirs, __ = next(os.walk(lambda_path))
-        # assert 'zip_files' in dirs
         _, __, zip_files = next(os.walk(lambda_path))
         assert 'deployment.zip' in zip_files
         assert 'deployment2.zip' in zip_files
+
+def test_manifest_file_json(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
+    lambda_path = lambda_paths['manifest_file_json']
+    lambda_env = environments['manifest_file_json']
+    with context_modified_environ(**lambda_env):
+        monkeypatch.setattr(os, "getcwd", lambda: lambda_path)
+        # Lets create the zip
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            entrypoint.create_multiple_artifacts(lambda_env['MANIFEST_FILE'])
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == 0
+
+        _, __, zip_files = next(os.walk(lambda_path))
+        assert 'deployment.zip' in zip_files
+        assert 'deployment2.zip' in zip_files
+
 
 def test_no_requirements(lambda_paths, environments, context_modified_environ, monkeypatch, glob_ignore_worked):
     lambda_path = lambda_paths['no_requirements']
