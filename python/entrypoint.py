@@ -10,6 +10,7 @@ import shutil
 import logging
 import uuid
 import subprocess
+import json
 from subprocess import PIPE
 from shutil import which
 from typing import Set
@@ -113,7 +114,7 @@ def copy_to_build_dir(workspace_path: str, build_path: str, code_path: str) -> (
     """
     try:
         build_id = uuid.uuid4().hex
-        LOGGER.info("UUID assigned to packager build: %s", build_id)
+        LOGGER.info("UUID (%s) assigned to packager build for code %s", build_id, code_path)
         full_build_path = join(workspace_path, build_path, build_id)
         # First remove the build directory if it exists
         if os.path.exists(full_build_path):
@@ -157,7 +158,7 @@ def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: d
     reqs_file_path = join(workspace_path, build_path, build_id, reqs_file_path)
 
     try:
-        LOGGER.info("Pip installing...")
+        LOGGER.info("Pip installing for %s...", build_id)
         if os.path.exists(reqs_file_path):
             if ssh_flip:
                 LOGGER.info("FLIP_SSH enabled...")
@@ -178,16 +179,17 @@ def pip_install(workspace_path: str, build_path: str, build_id: str, # pylint: d
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            LOGGER.info("\n%s", complete_instance.stdout.decode())
+            LOGGER.info("Pip installed %s, \n%s", build_id, complete_instance.stdout.decode())
         else:
             LOGGER.info(
                 "\n==================================================================\n"
                 "Could not find packages to install in either:\n"
                 "    Requirements File: %s\n"
                 "    Setup File: %s\n"
+                "for build id: %s\n"
                 "Assuming no requirements needed...\n"
                 "==================================================================",
-                reqs_file_path, setup_file_path
+                reqs_file_path, setup_file_path, build_id
             )
             error_codes.add(0)
         # Change execution permissions
@@ -353,7 +355,10 @@ def create_multiple_artifacts(manifest_file_path: str): # pylint: disable=too-ma
     defaults = get_environment_defaults()
     full_manifest_path = os.path.join(workspace, manifest_file_path)
     with open(full_manifest_path) as file_pointer:
-        manifest_object = yaml.safe_load(file_pointer)
+        if full_manifest_path.endswith('json'):
+            manifest_object = json.load(full_manifest_path)
+        else:
+            manifest_object = yaml.safe_load(file_pointer)
     try:
         processes = list()
         for lambda_spec in manifest_object['Lambdas']:

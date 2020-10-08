@@ -1,5 +1,5 @@
 # Python Lambda Packager Manifest File
-To allow for the packager to package several different lambdas at once, we leverage a manifest file. The name of the file is unimportant, but the schema of the file is defined below. The file should be a `YAML` file.
+To allow for the packager to package several different lambdas at once, we leverage a manifest file. The name of the file is unimportant, but the schema of the file is defined below. The file should be a `.yml`, `.yaml`, or `.json` file.
 _____
 ## YAML
 
