@@ -207,7 +207,8 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            LOGGER.info("\n%s", complete_instance.stdout.decode())
+            LOGGER.info("Pip installed for build id: %s, \n%s",
+                        build_id, complete_instance.stdout.decode())
         elif os.path.exists(setup_file_path):
             complete_instance = subprocess.run(
                 f"pip3 install -t {target_path}/"
@@ -216,7 +217,8 @@ def pip_install(variables: dict, build_id: str) -> Set[int]:
                 check=True,
                 stdout=PIPE, stderr=PIPE
             )
-            LOGGER.info("Pip installed %s, \n%s", build_id, complete_instance.stdout.decode())
+            LOGGER.info("Pip installed for build id: %s, \n%s",
+                        build_id, complete_instance.stdout.decode())
         else:
             LOGGER.info(
                 "\n==================================================================\n"
