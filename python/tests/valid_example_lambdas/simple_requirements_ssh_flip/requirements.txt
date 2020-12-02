@@ -4,5 +4,6 @@ flask
 tinydb-git
 credstash
 psycopg2-binary
--r req2.txt
--r req3.txt
+boto3
+pylint
+awsgi-remix@git+https://github.mmm.com/MMM/awsgi-remix
