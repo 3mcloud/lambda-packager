@@ -18,6 +18,7 @@ from os.path import join, split
 from ast import literal_eval
 from functools import lru_cache
 from multiprocessing import Process
+from pkg_resources import RequirementParseError
 
 # 3rd Party
 import requirements
@@ -154,18 +155,32 @@ def flip_ssh(requirment_file_path: str) -> list:
     LOGGER.info("Scanning requirements and looking for SSH requirements.")
     with open(requirment_file_path) as req_file:
         reqs = []
-        for req in requirements.parse(req_file):
-            ssh_domain = domain_search.search(req.line)
-            if ssh_domain and not has_ssh(ssh_domain.group(1)):
-                reqs.append(expression.sub('https://', req.line) + '\n')
-                LOGGER.info(
-                    "No access to domain %s:\n"
-                    "       Swapping:\n"
-                    "           - %s\n"
-                    "       For:\n"
-                    "           - %s\n", ssh_domain.group(1), req.line, reqs[-1])
-            else:
-                reqs.append(req.line + '\n')
+        while True:
+            try:
+                req = next(req_file)
+                for req in requirements.parse(req_file):
+                    ssh_domain = domain_search.search(req.line)
+                    if ssh_domain and not has_ssh(ssh_domain.group(1)):
+                        reqs.append(expression.sub('https://', req.line) + '\n')
+                        LOGGER.info(
+                            "No access to domain %s:\n"
+                            "       Swapping:\n"
+                            "           - %s\n"
+                            "       For:\n"
+                            "           - %s\n", ssh_domain.group(1), req.line, reqs[-1])
+                    else:
+                        reqs.append(req.line + '\n')
+            except RequirementParseError as err_obj:
+                LOGGER.error(
+                    "Was unable to parse requirement. If you are using local pathing to "
+                    "a pip package then ignore this error. If this error fired on a non SSH "
+                    " requirement, you can also ignore this error.\n"
+                    "Error: \n%s",
+                    err_obj
+                )
+            except StopIteration:
+                break
+
     with open(requirment_file_path, 'w') as req_file:
         req_file.writelines(reqs)
     # Not authenticated via ssh. Change ssh to https dependencies
