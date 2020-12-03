@@ -4,7 +4,7 @@ Setup tools
 '''
 from setuptools import setup, find_packages
 
-NAME = 'lambda'
+NAME = 'simple-setup-project'
 VERSION = '0.1'
 AUTHOR = 'Michael Neil'
 AUTHOR_EMAIL = 'mneil.cw@mmm.com'

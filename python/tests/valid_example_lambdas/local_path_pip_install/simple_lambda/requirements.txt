@@ -4,4 +4,3 @@ flask
 tinydb-git
 credstash
 psycopg2-binary
-./../simple_setup_project
