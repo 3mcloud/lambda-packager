@@ -1,0 +1,6 @@
+PyYAML>=4.2b1
+requests
+flask
+tinydb-git
+credstash
+psycopg2-binary

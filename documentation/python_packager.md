@@ -1,5 +1,8 @@
 # Python Lambda Packager
 
+## BUGS:
+- **Local Paths Fail**: To flip ssh credentials to https within requirments.txt files (if ssh fails) this packager uses the PyPi package [`requirements-parser`](https://pypi.org/project/requirements-parser/). Unfortanitely there is a bug with the current parser when working with local paths such as `./my_packages/my_sweet_package`, this can be hacked around but this bug will remain till the ticket is fixed: [See the ticket and hack around here](https://github.com/davidfischer/requirements-parser/issues/54). You can also set `SSH_FLIP=False` (the default) and this issue will not occur.
+
 ## TL;DR
 Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
 ```bash

@@ -220,6 +220,8 @@ def pip_install(variables: dict) -> Set[int]:
                 The path of the workspace we are working within (absolute).
             build_path: (str)
                 The path of the build directory (Relative to the workspace or absolute).
+            code_path: The path to the code directory.
+                (Relative to the build directory or absolute).
             reqs_file_path: (str)
                 The path to the requirements file. Irrelavent if you are using a
                 setup.py file. (Relative to the build directory or absolute).
@@ -235,17 +237,15 @@ def pip_install(variables: dict) -> Set[int]:
     error_codes = set()
     setup_file_path = join(
         variables['workspace_path'],
-        variables['build_path'],
-        variables['build_name'],
+        variables['code_path'],
         variables['setup_file_path']
     )
     reqs_file_path = join(
         variables['workspace_path'],
-        variables['build_path'],
-        variables['build_name'],
+        variables['code_path'],
         variables['reqs_file_path']
     )
-    target_path = join(
+    target_path = join( # We do the pip install to here
         variables['workspace_path'],
         variables['build_path'],
         variables['build_name']
