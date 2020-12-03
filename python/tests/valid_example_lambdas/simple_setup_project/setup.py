@@ -6,10 +6,10 @@ from setuptools import setup, find_packages
 
 NAME = 'lambda'
 VERSION = '0.1'
-AUTHOR = 'Michael Neil'
-AUTHOR_EMAIL = 'mneil.cw@mmm.com'
+AUTHOR = 'Author Name'
+AUTHOR_EMAIL = 'example@cool.com'
 DESCRIPTION = 'setuptools test'
-URL = 'https://github.mmm.com/MMM/aws-policy-api'
+URL = 'https://github.com/domain/url'
 REQUIRES = [
     'PyYAML>=4.2b1',
     'requests',
