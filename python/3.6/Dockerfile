@@ -10,7 +10,7 @@ RUN yum -y install git \
     && yum clean all
 
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install requirements-parser PyYAML jsonschema
+RUN python3 -m pip install requirement-walker==0.0.1 PyYAML jsonschema
 
 ENV VERSION=3.6
 
