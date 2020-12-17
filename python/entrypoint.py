@@ -22,7 +22,7 @@ from multiprocessing import Process
 # 3rd Party
 import yaml
 from jsonschema import validate, ValidationError
-from requirement_walker import walk
+from requirement_walker import RequirementFile
 
 # Owned
 
@@ -159,7 +159,7 @@ def flip_ssh(input_file_path: str, output_file_path: str) -> None:
     LOGGER.info("Scanning requirements and looking for SSH requirements for file: %s",
                 input_file_path)
     entries = []
-    for entry in walk(input_file_path):
+    for entry in RequirementFile(input_file_path).iter_recursive():
         if entry.requirement.url:
             ssh_domain = domain_search.search(entry.requirement.url)
             if ssh_domain and not has_ssh(ssh_domain.group(1)):
