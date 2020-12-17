@@ -160,7 +160,7 @@ def flip_ssh(input_file_path: str, output_file_path: str) -> None:
                 input_file_path)
     entries = []
     for entry in RequirementFile(input_file_path).iter_recursive():
-        if entry.requirement.url:
+        if entry.requirement and entry.requirement.url:
             ssh_domain = domain_search.search(entry.requirement.url)
             if ssh_domain and not has_ssh(ssh_domain.group(1)):
                 new_url = expression.sub('https://', entry.requirement.url)
