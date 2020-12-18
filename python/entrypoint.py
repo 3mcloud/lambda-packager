@@ -26,6 +26,7 @@ from requirement_walker import RequirementFile
 
 # Owned
 
+logging.getLogger('requirement_walker').setLevel(logging.ERROR)
 LOGGER = logging.getLogger(__name__)
 FORMAT = "%(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT)
