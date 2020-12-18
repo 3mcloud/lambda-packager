@@ -21,7 +21,7 @@ RUN yum -y groupinstall "Development Tools" \
     && cd .. \
     && rm Python-${PYTHON_VERSION}.tgz \
     && ${PYTHON3_ALIAS} -m pip install --upgrade pip \
-    && ${PYTHON3_ALIAS} -m pip install requirements-parser PyYAML jsonschema
+    && ${PYTHON3_ALIAS} -m pip install requirement-walker==0.0.6 PyYAML jsonschema
 
 RUN ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3
 

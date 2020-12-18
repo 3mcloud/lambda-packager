@@ -20,9 +20,9 @@ from functools import lru_cache
 from multiprocessing import Process
 
 # 3rd Party
-import requirements
 import yaml
 from jsonschema import validate, ValidationError
+from requirement_walker import RequirementFile
 
 # Owned
 
@@ -143,31 +143,39 @@ def has_ssh(ssh_domain: str) -> bool:
         return False
     return True
 
-def flip_ssh(requirment_file_path: str) -> list:
+def flip_ssh(input_file_path: str, output_file_path: str) -> None:
     """
     Attempt to authenticate with ssh to github.com
     If permission is denied then flip the ssh dependencies
-    to https dependencies automatically.
+    to https dependencies automatically. Will overwrite the passed
+    in requirements file.
+    ARGS:
+        input_file_path (str): Path to the inputted requirements.txt file.
+        output_file_path (str): Path to output all the requirements to.
+    All requirements will be outputted
     """
     expression = re.compile(r'ssh://git@')
     domain_search = re.compile(r"(?<=ssh://)(.*?)(?=/)")
-    LOGGER.info("Scanning requirements and looking for SSH requirements.")
-    with open(requirment_file_path) as req_file:
-        reqs = []
-        for req in requirements.parse(req_file):
-            ssh_domain = domain_search.search(req.line)
+    LOGGER.info("Scanning requirements and looking for SSH requirements for file: %s",
+                input_file_path)
+    entries = []
+    for entry in RequirementFile(input_file_path).iter_recursive():
+        if entry.requirement and entry.requirement.url:
+            ssh_domain = domain_search.search(entry.requirement.url)
             if ssh_domain and not has_ssh(ssh_domain.group(1)):
-                reqs.append(expression.sub('https://', req.line) + '\n')
+                new_url = expression.sub('https://', entry.requirement.url)
                 LOGGER.info(
                     "No access to domain %s:\n"
                     "       Swapping:\n"
                     "           - %s\n"
                     "       For:\n"
-                    "           - %s\n", ssh_domain.group(1), req.line, reqs[-1])
-            else:
-                reqs.append(req.line + '\n')
-    with open(requirment_file_path, 'w') as req_file:
-        req_file.writelines(reqs)
+                    "           - %s\n", ssh_domain.group(1), entry.requirement.url, new_url)
+                entry.requirement.url = new_url
+        entries.append(entry)
+    LOGGER.info("Outputting new requirements to %s:\n%s",
+                output_file_path, [str(entry) for entry in entries])
+    with open(output_file_path, 'w') as req_file:
+        req_file.writelines((str(entry) + '\n' for entry in entries))
     # Not authenticated via ssh. Change ssh to https dependencies
 
 def copy_to_build_dir(variables: dict) -> Set[int]:
@@ -256,7 +264,9 @@ def pip_install(variables: dict) -> Set[int]:
         if os.path.exists(reqs_file_path):
             if variables['ssh_flip']:
                 LOGGER.info("FLIP_SSH enabled...")
-                flip_ssh(reqs_file_path)
+                save_reqs_to = join(target_path, '__package_saved_reqs.txt')
+                flip_ssh(reqs_file_path, save_reqs_to)
+                reqs_file_path = save_reqs_to
             complete_instance = subprocess.run(
                 f"pip3 install -r {reqs_file_path} -t {target_path}/",
                 shell=True,
