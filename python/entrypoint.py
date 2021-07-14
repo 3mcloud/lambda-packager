@@ -269,7 +269,7 @@ def pip_install(variables: dict) -> Set[int]:
                 flip_ssh(reqs_file_path, save_reqs_to)
                 reqs_file_path = save_reqs_to
             complete_instance = subprocess.run(
-                f"pip3 install -r {reqs_file_path} -t {target_path}/",
+                f"pip3 install --upgrade -r {reqs_file_path} -t {target_path}/",
                 shell=True,
                 check=True,
                 stdout=PIPE, stderr=PIPE
@@ -279,7 +279,7 @@ def pip_install(variables: dict) -> Set[int]:
                         complete_instance.stdout.decode())
         elif os.path.exists(setup_file_path):
             complete_instance = subprocess.run(
-                f"pip3 install -t {target_path}/"
+                f"pip3 install --upgrade -t {target_path}/"
                 f" {join(split(setup_file_path)[0], '.')}",
                 shell=True,
                 check=True,
