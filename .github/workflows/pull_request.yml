@@ -70,3 +70,20 @@ jobs:
         tags: "node-12.16-rc"
         context: node/.
         dockerfile: node/12.16/Dockerfile
+
+  build-node14x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test node 14.x
+      run: make test VERSION=14.18 RUNTIME=node
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "node-14.18-rc"
+        context: node/.
+        dockerfile: node/14.18/Dockerfile
