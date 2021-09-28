@@ -62,6 +62,21 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-latest,node-12.16"
+        tags: "node-12.16"
         context: node/.
         dockerfile: node/12.16/Dockerfile
+
+  build-node14x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "node-latest,node-14.18"
+        context: node/.
+        dockerfile: node/14.18/Dockerfile
