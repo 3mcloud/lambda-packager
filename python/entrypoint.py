@@ -484,7 +484,6 @@ def create_multiple_artifacts(manifest_file_path: str):
 if __name__ == '__main__':
     MANIFEST_FILE_PATH = os.getenv("MANIFEST_FILE", "")
     # Add poetry to the path
-    os.setenv('PATH', f'/root/.local/bin:{os.getenv("PATH")}')
     if MANIFEST_FILE_PATH:
         create_multiple_artifacts(MANIFEST_FILE_PATH)
     else:
