@@ -7,7 +7,8 @@ RUN yum -y install git \
     zip \
     gcc \
     which \
-    && yum clean all
+    && yum clean all \
+    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install requirement-walker==0.0.9 PyYAML jsonschema
