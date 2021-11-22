@@ -40,6 +40,7 @@ jobs:
         tags: "python-3.7-${{ github.head_ref }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
+
   build-python38:
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +57,23 @@ jobs:
         tags: "python-3.8-${{ github.head_ref }}"
         context: python/.
         dockerfile: python/3.8/Dockerfile
+
+  build-python39:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: Build and test python 3.9
+      run: make test VERSION=3.9
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "python-3.9-${{ github.head_ref }}"
+        context: python/.
+        dockerfile: python/3.9/Dockerfile
 
   build-node12x:
     runs-on: ubuntu-latest

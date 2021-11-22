@@ -1,4 +1,4 @@
-VERSION ?= 3.8
+VERSION ?= 3.9
 RUNTIME ?= python
 
 build:

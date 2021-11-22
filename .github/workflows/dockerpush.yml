@@ -47,9 +47,24 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-3.8"
+        tags: "python-3.8"
         context: python/.
         dockerfile: python/3.8/Dockerfile
+
+  build-python39:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v1
+    - name: push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "latest,python-3.9"
+        context: python/.
+        dockerfile: python/3.9/Dockerfile
 
   build-node12x:
     runs-on: ubuntu-latest

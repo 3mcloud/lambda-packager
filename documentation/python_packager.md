@@ -5,7 +5,7 @@ Lets say all our code is within a `src` directory and within that `src` director
 ```bash
 	docker run -it --rm \
         -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our code to the container
-		3mcloud/lambda-packager:python-3.6
+		3mcloud/lambda-packager:python-3.9
 ```
 And **boom**, `deployment.zip` should be in your repository root.
 
@@ -41,7 +41,7 @@ Our code is in a directory named `code` and we have a `reqs.txt` file within tha
         -e CI_WORKSPACE=/src \ # We will be working with /src
 		-e LAMBDA_CODE_DIR=/code \ # The code to be packaged is within /src/code
 		-e REQUIREMENTS_FILE=reqs.txt \ # Requirements are in /src/code/reqs.txt
-		3mcloud/lambda-packager:python-3.6
+		3mcloud/lambda-packager:python-3.9
 ```
 Alternatively, lets say we only want to mount the `code` directory and not the entire root of our project:
 ```bash
@@ -50,11 +50,11 @@ Alternatively, lets say we only want to mount the `code` directory and not the e
 		-e LAMBDA_CODE_DIR=/src \ # The code to be packaged is within /src (Note CI_WORKSPACE is /)
 		-e REQUIREMENTS_FILE=reqs.txt \ # Requirements are in /src/reqs.txt
         -e ARTIFACT_NAME=/src/deployment.zip \ # We need to save the zip within /src/ since we didn't mount the root level.
-		3mcloud/lambda-packager:python-3.6
+		3mcloud/lambda-packager:python-3.9
 ```
 Lasty, we can try to leverage the default values. Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
 ```bash
 	docker run -it --rm \
         -v $(if ${PWD},${PWD},${CURDIR}):/src \ # First mount our code to the container
-		3mcloud/lambda-packager:python-3.6
+		3mcloud/lambda-packager:python-3.9
 ```
