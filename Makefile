@@ -13,24 +13,8 @@ bash: build
 		-v $(if ${PWD},${PWD},${CURDIR}):/src \
 		$(IMAGE_NAME):$(RUNTIME)-$(VERSION) /bin/sh
 
-install:
-	pip3 install -r python/requirements-dev.txt
-
-clean-up:
-	rm -rf *.zip
-	rm -rf python/*.zip
-
-lint:
-	python3 -m pylint --fail-under=9 python/entrypoint.py
-
-unit:
-	python3 -m pytest -x -s -vvv python/tests/
-
 test: build
 	docker run --rm\
-		-w /src \
-		-v $(if ${PWD},${PWD},${CURDIR}):/src \
-		$(IMAGE_NAME):$(RUNTIME)-$(VERSION) /bin/bash -c "make validate"
-
-# setup and run all tests
-validate: clean-up install lint unit
+		-w /test \
+		-v $(if ${PWD},${PWD},${CURDIR})/$(RUNTIME):/test \
+		$(IMAGE_NAME):$(RUNTIME)-$(VERSION) /bin/sh -c "rm -rf *.zip && chmod +x ./test.sh && ./test.sh"

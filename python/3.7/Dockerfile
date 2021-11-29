@@ -1,20 +1,22 @@
 FROM amazonlinux:2018.03
 
-ENV PYTHON_VERSION 3.7.6
+ENV PYTHON_VERSION 3.7.12
 ENV PYTHON3_ALIAS python3.7
 
 RUN yum -y groupinstall "Development Tools" && \
     yum -y install git \
-    wget \
+    autoconf-archive \
     automake \
     bzip2-devel \
     libffi-devel \
     libressl-dev \
     openssl-devel \
-    sqlite-devel \
     postgresql-dev \
+    sqlite-devel \
+    wget \
     which \
     && yum clean all \
+    && rm -rf /var/cache/yum \
     && wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz \
     && tar xzf Python-${PYTHON_VERSION}.tgz \
     && cd Python-${PYTHON_VERSION} && autoreconf -i && ./configure --enable-optimizations && make altinstall \
