@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Production Push Image CI
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: push
       uses: elgohr/Publish-Docker-Github-Action@master

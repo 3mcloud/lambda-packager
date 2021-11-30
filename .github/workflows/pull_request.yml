@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Pull Request Image CI
 
 on:
   - pull_request
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test python 3.6
       id: buld_test
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test python 3.7
       id: buld_test
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test python 3.8
       id: buld_test
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test python 3.9
       id: buld_test
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test node 12.x
       id: buld_test
@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Build and test node 14.x
       id: buld_test
