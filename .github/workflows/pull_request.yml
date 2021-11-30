@@ -1,4 +1,5 @@
-name: Docker Pull Request Image CI
+name: Docker Publish Pull Request RC Images CI
+# Publish Images to DockerHub with a '-rc' tag ending on a Pull Request
 
 on:
   - pull_request

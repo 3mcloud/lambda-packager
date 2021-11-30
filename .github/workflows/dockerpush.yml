@@ -1,4 +1,5 @@
-name: Docker Production Push Image CI
+name: Docker Publish Production Images CI
+# Publish Production images to DockerHub
 
 on:
   push:
@@ -66,7 +67,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-3.9"
+        tags: "latest,python-latest,python-3.9"
         context: python/.
         dockerfile: python/3.9/Dockerfile
 

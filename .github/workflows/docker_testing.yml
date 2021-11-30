@@ -1,4 +1,6 @@
-name: Docker Testing Image CI
+name: Docker Publish Test Images CI
+# Publish Images to DockerHub with a '-<git_commmit_sha>' tag ending
+# on every branch push, excluding 'master'.
 
 on:
   push:
@@ -24,7 +26,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-${{github.head_ref}}"
+        tags: "python-3.6,python-3.6-${{github.sha}}"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -45,7 +47,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-${{ github.head_ref }}"
+        tags: "python-3.7,python-3.7-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
 
@@ -66,7 +68,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-${{ github.head_ref }}"
+        tags: "python-3.8,python-3.8-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
@@ -87,7 +89,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.9-${{ github.head_ref }}"
+        tags: "python-3.9,python-3.9-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.9/Dockerfile
 
@@ -108,7 +110,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16-${{ github.head_ref }}"
+        tags: "node-12.16,node-12.16-${{ github.sha }}"
         context: node/.
         dockerfile: node/12.16/Dockerfile
 
@@ -129,6 +131,6 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-14.18-${{ github.head_ref }}"
+        tags: "node-14.18,node-14.18-${{ github.sha }}"
         context: node/.
         dockerfile: node/14.18/Dockerfile
