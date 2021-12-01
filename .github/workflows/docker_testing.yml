@@ -1,4 +1,6 @@
-name: Docker Image CI
+name: Docker Publish Test Images CI
+# Publish Images to DockerHub with a '-<git_commmit_sha>' tag ending
+# on every branch push, excluding 'master'.
 
 on:
   push:
@@ -11,16 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Build and test python 3.6
+      id: buld_test
       run: make test VERSION=3.6
+
     - name: push
+      if: steps.buld_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-${{github.head_ref}}"
+        tags: "python-3.6-${{github.sha}}"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -28,49 +34,83 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Build and test python 3.7
+      id: buld_test
       run: make test VERSION=3.7
+
     - name: push
+      if: steps.buld_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-${{ github.head_ref }}"
+        tags: "python-3.7-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
+
   build-python38:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Build and test python 3.8
+      id: buld_test
       run: make test VERSION=3.8
+
     - name: push
+      if: steps.buld_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-${{ github.head_ref }}"
+        tags: "python-3.8-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.8/Dockerfile
+
+  build-python39:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Build and test python 3.9
+      id: buld_test
+      run: make test VERSION=3.9
+
+    - name: push
+      if: steps.buld_test.outcome == 'success'
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "python-3.9-${{ github.sha }}"
+        context: python/.
+        dockerfile: python/3.9/Dockerfile
 
   build-node12x:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Build and test node 12.x
+      id: buld_test
       run: make test VERSION=12.16 RUNTIME=node
+
     - name: push
+      if: steps.buld_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16-${{ github.head_ref }}"
+        tags: "node-12.16-${{ github.sha }}"
         context: node/.
         dockerfile: node/12.16/Dockerfile
 
@@ -78,15 +118,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
     - name: Build and test node 14.x
+      id: buld_test
       run: make test VERSION=14.18 RUNTIME=node
+
     - name: push
+      if: steps.buld_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-14.18-${{ github.head_ref }}"
+        tags: "node-14.18-${{ github.sha }}"
         context: node/.
         dockerfile: node/14.18/Dockerfile

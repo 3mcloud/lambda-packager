@@ -1,10 +1,10 @@
-FROM amazonlinux:2018.03
+FROM amazonlinux:2
 
-ENV PYTHON_VERSION 3.7.12
-ENV PYTHON3_ALIAS python3.7
+ENV PYTHON_VERSION 3.9.9
+ENV PYTHON3_ALIAS python3.9
 
-RUN yum -y groupinstall "Development Tools" && \
-    yum -y install git \
+RUN yum -y groupinstall "Development Tools" \
+    && yum -y install git \
     autoconf-archive \
     automake \
     bzip2-devel \
