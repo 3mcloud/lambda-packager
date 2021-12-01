@@ -1,12 +1,12 @@
 FROM amazonlinux:2017.03
 
 RUN yum -y install git \
-    python36 \
-    python36-pip \
-    python36-devel \
-    zip \
     gcc \
+    python36 \
+    python36-devel \
+    python36-pip \
     which \
+    zip \
     && yum clean all \
     && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 \
     && ln -s /root/.local/bin/poetry /usr/bin/poetry

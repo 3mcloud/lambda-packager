@@ -1,10 +1,10 @@
-FROM amazonlinux:2018.03
+FROM amazonlinux:2
 
-ENV PYTHON_VERSION 3.7.12
-ENV PYTHON3_ALIAS python3.7
+ENV PYTHON_VERSION 3.9.9
+ENV PYTHON3_ALIAS python3.9
 
-RUN yum -y groupinstall "Development Tools" && \
-    yum -y install git \
+RUN yum -y groupinstall "Development Tools" \
+    && yum -y install git \
     autoconf-archive \
     automake \
     bzip2-devel \
@@ -23,10 +23,9 @@ RUN yum -y groupinstall "Development Tools" && \
     && cd .. \
     && rm Python-${PYTHON_VERSION}.tgz \
     && ${PYTHON3_ALIAS} -m pip install --upgrade pip \
-    && ${PYTHON3_ALIAS} -m pip install requirement-walker==0.0.9 PyYAML jsonschema \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3.7 \
-    && ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3 \
-    && ln -s /root/.local/bin/poetry /usr/bin/poetry
+    && ${PYTHON3_ALIAS} -m pip install requirement-walker==0.0.9 PyYAML jsonschema
+
+RUN ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
