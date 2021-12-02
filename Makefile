@@ -1,3 +1,4 @@
+export DOCKER_BUILDKIT=1
 IMAGE_NAME:=3mcloud/lambda-packager
 VERSION ?= 3.9
 RUNTIME ?= python
