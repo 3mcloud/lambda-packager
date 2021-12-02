@@ -83,9 +83,9 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16"
+        tags: "node-12.22"
         context: node/.
-        dockerfile: node/12.16/Dockerfile
+        dockerfile: node/12.22/Dockerfile
 
   build-node14x:
     runs-on: ubuntu-latest

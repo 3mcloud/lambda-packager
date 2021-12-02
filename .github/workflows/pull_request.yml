@@ -12,11 +12,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test python 3.6
-      id: buld_test
+      id: build_test
       run: make test VERSION=3.6
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
@@ -33,11 +33,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test python 3.7
-      id: buld_test
+      id: build_test
       run: make test VERSION=3.7
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
@@ -54,11 +54,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test python 3.8
-      id: buld_test
+      id: build_test
       run: make test VERSION=3.8
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
@@ -75,11 +75,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test python 3.9
-      id: buld_test
+      id: build_test
       run: make test VERSION=3.9
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
@@ -96,19 +96,19 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test node 12.x
-      id: buld_test
-      run: make test VERSION=12.16 RUNTIME=node
+      id: build_test
+      run: make test VERSION=12.22 RUNTIME=node
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.16-rc"
+        tags: "node-12.22-rc"
         context: node/.
-        dockerfile: node/12.16/Dockerfile
+        dockerfile: node/12.22/Dockerfile
 
   build-node14x:
     runs-on: ubuntu-latest
@@ -117,11 +117,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and test node 14.x
-      id: buld_test
+      id: build_test
       run: make test VERSION=14.18 RUNTIME=node
 
     - name: push
-      if: steps.buld_test.outcome == 'success'
+      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
