@@ -1,12 +1,12 @@
-name: Docker Publish Test Images CI
-# Publish Images to DockerHub with a '-<git_commit_sha>' tag ending
-# on every branch push, excluding 'master'.
+name: Docker Publish QA
+# Publish Images to DockerHub with 2 tags per image:
+#  '<image>-qa', '<image>-<git_commit_sha>'
+# on every branch push
 
 on:
   push:
     branches:
       - "*"
-      - "!master"
 
 jobs:
   build-python36:
@@ -26,7 +26,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-,python-3.6-qa"
+        tags: "python-3.6-qa,python-3.6-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -47,7 +47,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-,python-3.7-qa"
+        tags: "python-3.7-qa,python-3.7-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
 
@@ -68,7 +68,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-,python-3.8-qa"
+        tags: "python-3.8-qa,python-3.8-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
@@ -89,7 +89,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.9-,python-3.9-qa"
+        tags: "python-3.9-qa,python-3.9-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.9/Dockerfile
 
@@ -110,7 +110,7 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.22-,node-12.22-qa"
+        tags: "node-12.22-qa,node-12.22-${{ github.sha }}"
         context: node/.
         dockerfile: node/12.22/Dockerfile
 
@@ -131,6 +131,6 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-14.18-,node-14.18-qa"
+        tags: "node-14.18-qa,node-14.18-${{ github.sha }}"
         context: node/.
         dockerfile: node/14.18/Dockerfile

@@ -1,8 +1,10 @@
-name: Docker Publish Pull Request RC Images CI
-# Publish Images to DockerHub with a '-rc' tag ending on a Pull Request
+name: Docker Publish Prod
+# Publish Production images to DockerHub
 
 on:
-  - pull_request
+  push:
+    branches:
+      - master
 
 jobs:
   build-python36:
@@ -11,18 +13,13 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test python 3.6
-      id: build_test
-      run: make test VERSION=3.6
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-rc"
+        tags: "python-3.6"
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
@@ -32,18 +29,13 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test python 3.7
-      id: build_test
-      run: make test VERSION=3.7
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-rc"
+        tags: "python-3.7"
         context: python/.
         dockerfile: python/3.7/Dockerfile
 
@@ -53,18 +45,13 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test python 3.8
-      id: build_test
-      run: make test VERSION=3.8
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-rc"
+        tags: "python-3.8"
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
@@ -74,18 +61,13 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test python 3.9
-      id: build_test
-      run: make test VERSION=3.9
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.9-rc"
+        tags: "latest,python-latest,python-3.9"
         context: python/.
         dockerfile: python/3.9/Dockerfile
 
@@ -95,18 +77,13 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test node 12.x
-      id: build_test
-      run: make test VERSION=12.22 RUNTIME=node
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-12.22-rc"
+        tags: "node-12.22"
         context: node/.
         dockerfile: node/12.22/Dockerfile
 
@@ -116,17 +93,12 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Build and test node 14.x
-      id: build_test
-      run: make test VERSION=14.18 RUNTIME=node
-
     - name: push
-      if: steps.build_test.outcome == 'success'
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-14.18-rc"
+        tags: "node-latest,node-14.18"
         context: node/.
         dockerfile: node/14.18/Dockerfile

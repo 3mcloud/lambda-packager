@@ -1,7 +1,6 @@
 # lambda-packager
-![Build Status](https://github.com/3mcloud/lambda-packager/actions/workflows/docker_testing.yml/badge.svg)
-![Build Status](https://github.com/3mcloud/lambda-packager/actions/workflows/pull_request.yml/badge.svg)
-![Build Status](https://github.com/3mcloud/lambda-packager/actions/workflows/dockerpush.yml/badge.svg)
+![Build Status](https://github.com/3mcloud/lambda-packager/actions/workflows/docker-publish.yml/badge.svg)
+![Build Status](https://github.com/3mcloud/lambda-packager/actions/workflows/docker-publish-qa.yml/badge.svg)
 
 ## **Supported tags and respective `Dockerfile` links**:
 
