@@ -1,5 +1,7 @@
 #!/bin/sh
-# This file remains for backwards compatiability.
+# This file remains for backwards compatibility.
 set -ex
+# Add poetry
 python3 /entrypoint.py
-wait
+pid=$!
+wait $pid

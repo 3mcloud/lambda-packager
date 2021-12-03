@@ -1,6 +1,7 @@
 #!/bin/sh
 LAMBDA_CODE_DIR=./tests/package ARTIFACT_NAME=package.zip /entrypoint.sh
-wait
+pid=$!
+wait $pid
 
 filename=./package.zip
 minsize=1000000
