@@ -24,8 +24,8 @@ RUN yum -y groupinstall "Development Tools" && \
     && rm Python-${PYTHON_VERSION}.tgz \
     && ${PYTHON3_ALIAS} -m pip install --upgrade pip \
     && ${PYTHON3_ALIAS} -m pip install requirement-walker==0.0.9 PyYAML jsonschema \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3.7 \
     && ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3 \
+    && curl -sSL https://install.python-poetry.org | python3 - \
     && ln -s /root/.local/bin/poetry /usr/bin/poetry
 
 COPY entrypoint.sh /entrypoint.sh
