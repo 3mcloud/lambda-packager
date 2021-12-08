@@ -28,8 +28,6 @@ RUN yum -y groupinstall "Development Tools" \
     && curl -sSL https://install.python-poetry.org | python3 - \
     && ln -s /root/.local/bin/poetry /usr/bin/poetry
 
-RUN ln -s $(which ${PYTHON3_ALIAS}) /usr/bin/python3
-
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
