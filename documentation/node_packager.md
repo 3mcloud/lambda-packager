@@ -7,7 +7,7 @@ Make sure:
 - you have a `package.json` (and preferrably, also a `package-lock.json`) in your working directory
 
 ```bash
-docker run -it --rm -v $(pwd):/workspace -w /workspace 3mcloud/lambda-packager:node-12.16
+docker run -it --rm -v $(pwd):/workspace -w /workspace 3mcloud/lambda-packager:node-12.22
 ```
 
 And **boom**, `deployment.zip` should be in your repository root.
@@ -27,10 +27,10 @@ You can change the default behavior of this packager by using the environment va
 
 ### Examples
 
-See the _Examples_ for Python, except where you see `3mcloud/lambda-packager:python-3.6` replace that 
-with `3mcloud/lambda-packager:node-12.16`
+See the _Examples_ for Python, except where you see `3mcloud/lambda-packager:python-latest` replace that
+with `3mcloud/lambda-packager:node-12.22`
 
-The default behavior of the node packager is to assume that the `package.json` and `package-lock.json` 
+The default behavior of the node packager is to assume that the `package.json` and `package-lock.json`
 are in the same directory as the entry point for your application. For example, your application looks like this:
 
 ```bash
@@ -83,5 +83,5 @@ docker run -it --rm -w /test -v $(pwd):/test \
     -e NPM_PACKAGE_LOCK=./package-lock.json \
     -e LAMBDA_CODE_DIR=src \
     -e ARTIFACT_CODE_PREFIX=src \
-    3mcloud/lambda-packager:node-12.16
+    3mcloud/lambda-packager:node-12.22
 ```
