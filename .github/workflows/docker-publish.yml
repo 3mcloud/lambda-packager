@@ -5,9 +5,12 @@ on:
   push:
     branches:
       - master
+env:
+  IMAGE_NAME: lambda-packager
+  REGISTRY: ghcr.io
+  ORG: 3mcloud
 
 jobs:
-
   build-python36-ghcr:
     runs-on: ubuntu-latest
     steps:
