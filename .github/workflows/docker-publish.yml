@@ -28,7 +28,6 @@ jobs:
         dockerfile: python/3.6/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
@@ -54,7 +53,6 @@ jobs:
         dockerfile: python/3.7/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
@@ -80,7 +78,6 @@ jobs:
         dockerfile: python/3.8/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
@@ -106,7 +103,6 @@ jobs:
         dockerfile: python/3.9/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
@@ -134,7 +130,6 @@ jobs:
         dockerfile: node/12.22/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
@@ -160,7 +155,6 @@ jobs:
         dockerfile: node/14.18/Dockerfile
 
     - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
