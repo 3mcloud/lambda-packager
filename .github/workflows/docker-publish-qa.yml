@@ -8,7 +8,7 @@ on:
     branches:
       - "*"
 env:
-  IMAGE_NAME: lambda-packager
+  IMAGE_NAME: 3mcloud/lambda-packager
   REGISTRY: ghcr.io
   ORG: 3mcloud
 
@@ -40,7 +40,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
@@ -72,7 +72,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
@@ -104,7 +104,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
@@ -136,7 +136,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
@@ -168,7 +168,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-12.22-qa
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-12.22-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
@@ -200,7 +200,7 @@ jobs:
 
     - name: push-to-ghcr
       run: |
-        IMAGE_ID=${REGISTRY}/${ORG}/${IMAGE_NAME}
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-qa
         docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
