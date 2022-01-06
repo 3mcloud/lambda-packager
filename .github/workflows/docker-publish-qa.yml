@@ -7,6 +7,10 @@ on:
   push:
     branches:
       - "*"
+env:
+  IMAGE_NAME: 3mcloud/lambda-packager
+  REGISTRY: ghcr.io
+  ORG: 3mcloud
 
 jobs:
   build-python36:
@@ -30,6 +34,17 @@ jobs:
         context: python/.
         dockerfile: python/3.6/Dockerfile
 
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:python-3.6 ${IMAGE_ID}:qa-python-3.6
+        docker image tag ${IMAGE_NAME}:python-3.6 ${IMAGE_ID}:qa-python-3.6-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
+
   build-python37:
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +65,17 @@ jobs:
         tags: "python-3.7-qa,python-3.7-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.7/Dockerfile
+
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:python-3.7 ${IMAGE_ID}:qa-python-3.7
+        docker image tag ${IMAGE_NAME}:python-3.7 ${IMAGE_ID}:qa-python-3.7-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
 
   build-python38:
     runs-on: ubuntu-latest
@@ -72,6 +98,17 @@ jobs:
         context: python/.
         dockerfile: python/3.8/Dockerfile
 
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:python-3.8 ${IMAGE_ID}:qa-python-3.8
+        docker image tag ${IMAGE_NAME}:python-3.8 ${IMAGE_ID}:qa-python-3.8-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
+
   build-python39:
     runs-on: ubuntu-latest
     steps:
@@ -92,6 +129,17 @@ jobs:
         tags: "python-3.9-qa,python-3.9-${{ github.sha }}"
         context: python/.
         dockerfile: python/3.9/Dockerfile
+
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:python-3.9 ${IMAGE_ID}:qa-python-3.9
+        docker image tag ${IMAGE_NAME}:python-3.9 ${IMAGE_ID}:qa-python-3.9-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
 
   build-node12x:
     runs-on: ubuntu-latest
@@ -114,6 +162,17 @@ jobs:
         context: node/.
         dockerfile: node/12.22/Dockerfile
 
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-qa
+        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
+
   build-node14x:
     runs-on: ubuntu-latest
     steps:
@@ -134,3 +193,15 @@ jobs:
         tags: "node-14.18-qa,node-14.18-${{ github.sha }}"
         context: node/.
         dockerfile: node/14.18/Dockerfile
+
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-qa
+        docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
+
