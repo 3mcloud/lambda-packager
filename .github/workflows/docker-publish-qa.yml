@@ -169,7 +169,7 @@ jobs:
     - name: push-to-ghcr
       run: |
         IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-qa
+        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:qa-node-12.22
         docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
 
@@ -201,7 +201,7 @@ jobs:
     - name: push-to-ghcr
       run: |
         IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-qa
+        docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:qa-node-14.18
         docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
 
