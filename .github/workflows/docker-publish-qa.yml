@@ -13,133 +13,133 @@ env:
   ORG: 3mcloud
 
 jobs:
-  build-python36:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+  # build-python36:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the code
+  #     uses: actions/checkout@v2
 
-    - name: Build and test python 3.6
-      id: build_test
-      run: make test VERSION=3.6
+  #   - name: Build and test python 3.6
+  #     id: build_test
+  #     run: make test VERSION=3.6
 
-    - name: push
-      if: steps.build_test.outcome == 'success'
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.6-qa,python-3.6-${{ github.sha }}"
-        context: python/.
-        dockerfile: python/3.6/Dockerfile
+  #   - name: push
+  #     if: steps.build_test.outcome == 'success'
+  #     uses: elgohr/Publish-Docker-Github-Action@master
+  #     with:
+  #       name: 3mcloud/lambda-packager
+  #       username: ${{ secrets.DOCKERHUBUSER }}
+  #       password: ${{ secrets.DOCKERHUBPASS }}
+  #       tags: "python-3.6-qa,python-3.6-${{ github.sha }}"
+  #       context: python/.
+  #       dockerfile: python/3.6/Dockerfile
 
-    - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+  #   - name: login-to-ghcr
+  #     if: steps.build_test.outcome == 'success'
+  #     run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6-${{ github.sha }}
-        docker image push --all-tags $IMAGE_ID
+  #   - name: push-to-ghcr
+  #     run: |
+  #       IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.6-${{ github.sha }}
+  #       docker image push --all-tags $IMAGE_ID
 
-  build-python37:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+  # build-python37:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the code
+  #     uses: actions/checkout@v2
 
-    - name: Build and test python 3.7
-      id: build_test
-      run: make test VERSION=3.7
+  #   - name: Build and test python 3.7
+  #     id: build_test
+  #     run: make test VERSION=3.7
 
-    - name: push
-      if: steps.build_test.outcome == 'success'
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7-qa,python-3.7-${{ github.sha }}"
-        context: python/.
-        dockerfile: python/3.7/Dockerfile
+  #   - name: push
+  #     if: steps.build_test.outcome == 'success'
+  #     uses: elgohr/Publish-Docker-Github-Action@master
+  #     with:
+  #       name: 3mcloud/lambda-packager
+  #       username: ${{ secrets.DOCKERHUBUSER }}
+  #       password: ${{ secrets.DOCKERHUBPASS }}
+  #       tags: "python-3.7-qa,python-3.7-${{ github.sha }}"
+  #       context: python/.
+  #       dockerfile: python/3.7/Dockerfile
 
-    - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+  #   - name: login-to-ghcr
+  #     if: steps.build_test.outcome == 'success'
+  #     run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7-${{ github.sha }}
-        docker image push --all-tags $IMAGE_ID
+  #   - name: push-to-ghcr
+  #     run: |
+  #       IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.7-${{ github.sha }}
+  #       docker image push --all-tags $IMAGE_ID
 
-  build-python38:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+  # build-python38:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the code
+  #     uses: actions/checkout@v2
 
-    - name: Build and test python 3.8
-      id: build_test
-      run: make test VERSION=3.8
+  #   - name: Build and test python 3.8
+  #     id: build_test
+  #     run: make test VERSION=3.8
 
-    - name: push
-      if: steps.build_test.outcome == 'success'
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8-qa,python-3.8-${{ github.sha }}"
-        context: python/.
-        dockerfile: python/3.8/Dockerfile
+  #   - name: push
+  #     if: steps.build_test.outcome == 'success'
+  #     uses: elgohr/Publish-Docker-Github-Action@master
+  #     with:
+  #       name: 3mcloud/lambda-packager
+  #       username: ${{ secrets.DOCKERHUBUSER }}
+  #       password: ${{ secrets.DOCKERHUBPASS }}
+  #       tags: "python-3.8-qa,python-3.8-${{ github.sha }}"
+  #       context: python/.
+  #       dockerfile: python/3.8/Dockerfile
 
-    - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+  #   - name: login-to-ghcr
+  #     if: steps.build_test.outcome == 'success'
+  #     run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8-${{ github.sha }}
-        docker image push --all-tags $IMAGE_ID
+  #   - name: push-to-ghcr
+  #     run: |
+  #       IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.8-${{ github.sha }}
+  #       docker image push --all-tags $IMAGE_ID
 
-  build-python39:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+  # build-python39:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the code
+  #     uses: actions/checkout@v2
 
-    - name: Build and test python 3.9
-      id: build_test
-      run: make test VERSION=3.9
+  #   - name: Build and test python 3.9
+  #     id: build_test
+  #     run: make test VERSION=3.9
 
-    - name: push
-      if: steps.build_test.outcome == 'success'
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.9-qa,python-3.9-${{ github.sha }}"
-        context: python/.
-        dockerfile: python/3.9/Dockerfile
+  #   - name: push
+  #     if: steps.build_test.outcome == 'success'
+  #     uses: elgohr/Publish-Docker-Github-Action@master
+  #     with:
+  #       name: 3mcloud/lambda-packager
+  #       username: ${{ secrets.DOCKERHUBUSER }}
+  #       password: ${{ secrets.DOCKERHUBPASS }}
+  #       tags: "python-3.9-qa,python-3.9-${{ github.sha }}"
+  #       context: python/.
+  #       dockerfile: python/3.9/Dockerfile
 
-    - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+  #   - name: login-to-ghcr
+  #     if: steps.build_test.outcome == 'success'
+  #     run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9-${{ github.sha }}
-        docker image push --all-tags $IMAGE_ID
+  #   - name: push-to-ghcr
+  #     run: |
+  #       IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:qa-python-3.9-${{ github.sha }}
+  #       docker image push --all-tags $IMAGE_ID
 
   build-node12x:
     runs-on: ubuntu-latest
@@ -169,39 +169,39 @@ jobs:
     - name: push-to-ghcr
       run: |
         IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-12.22-qa
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-12.22-${{ github.sha }}
+        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-qa
+        docker image tag ${IMAGE_NAME}:node-12.22 ${IMAGE_ID}:node-12.22-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
 
-  build-node14x:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
+  # build-node14x:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the code
+  #     uses: actions/checkout@v2
 
-    - name: Build and test node 14.x
-      id: build_test
-      run: make test VERSION=14.18 RUNTIME=node
+  #   - name: Build and test node 14.x
+  #     id: build_test
+  #     run: make test VERSION=14.18 RUNTIME=node
 
-    - name: push
-      if: steps.build_test.outcome == 'success'
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "node-14.18-qa,node-14.18-${{ github.sha }}"
-        context: node/.
-        dockerfile: node/14.18/Dockerfile
+  #   - name: push
+  #     if: steps.build_test.outcome == 'success'
+  #     uses: elgohr/Publish-Docker-Github-Action@master
+  #     with:
+  #       name: 3mcloud/lambda-packager
+  #       username: ${{ secrets.DOCKERHUBUSER }}
+  #       password: ${{ secrets.DOCKERHUBPASS }}
+  #       tags: "node-14.18-qa,node-14.18-${{ github.sha }}"
+  #       context: node/.
+  #       dockerfile: node/14.18/Dockerfile
 
-    - name: login-to-ghcr
-      if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+  #   - name: login-to-ghcr
+  #     if: steps.build_test.outcome == 'success'
+  #     run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-qa
-        docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-${{ github.sha }}
-        docker image push --all-tags $IMAGE_ID
+  #   - name: push-to-ghcr
+  #     run: |
+  #       IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-qa
+  #       docker image tag ${IMAGE_NAME} ${IMAGE_ID}:node-14.18-${{ github.sha }}
+  #       docker image push --all-tags $IMAGE_ID
 
