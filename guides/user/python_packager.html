@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Python Lambda Packager Plugin User Guide &#8212; Lambda Packager  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Lambda Packager Manifest File" href="python_manifest.html" />
+    <link rel="prev" title="Lambda Packager User Guide" href="usage.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="python_manifest.html" title="Python Lambda Packager Manifest File"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Lambda Packager User Guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Lambda Packager  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="usage.html" accesskey="U">Lambda Packager User Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python Lambda Packager Plugin User Guide</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="python-lambda-packager-plugin-user-guide">
+<h1>Python Lambda Packager Plugin User Guide<a class="headerlink" href="#python-lambda-packager-plugin-user-guide" title="Permalink to this headline">¶</a></h1>
+<p>The Lambda Packager Plugin is an AWS Docker container that is used to package lambda zip files for deployment.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>This plugin’s github repository can be found here - <a class="reference external" href="https://github.com/3mcloud/lambda-packager">lambda-packager</a>.</p>
+<section id="tl-dr">
+<h3>TL;DR<a class="headerlink" href="#tl-dr" title="Permalink to this headline">¶</a></h3>
+<p>Make sure:</p>
+<ul class="simple">
+<li><p>your python code is in a folder called <cite>./src</cite></p></li>
+<li><p>you have a <cite>requirements.pip</cite> or <cite>requirements.txt</cite> in that <cite>src</cite> folder</p></li>
+</ul>
+<p>Try it out:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it --rm <span class="se">\</span>
+    -v <span class="k">$(if</span> <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">CURDIR</span><span class="si">}</span><span class="k">)</span>:/src <span class="se">\ </span><span class="c1"># First mount our code to the container</span>
+    3mcloud/lambda-packager:python-latest
+</pre></div>
+</div>
+<p>And <strong>boom</strong>, <cite>deployment.zip</cite> should be in your repository root.</p>
+<p><strong>Note:</strong> <cite>$(if ${PWD},${PWD},${CURDIR})</cite> is a ternary operator which we use to make it Windows and Mac agnostic with Makefiles.</p>
+</section>
+<section id="container-variables">
+<h3>Container Variables<a class="headerlink" href="#container-variables" title="Permalink to this headline">¶</a></h3>
+<p>You can change the default behavior of this packager by using the environment variables of the container</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable Name</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>MANIFEST_FILE</cite></p></td>
+<td><p>` `</p></td>
+<td><p>no</p></td>
+<td><p>If you only want to package a single lambda, ignore this environment variable, else see <a class="reference external" href="python_manifest.html">Manifest File</a>. This is the path, relative to <cite>CI_WORKSPACE</cite> or absolute, to the manifest file. Empty (default) if you don’t want to use it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>LAMBDA_CODE_DIR</cite></p></td>
+<td><p><cite>./src</cite></p></td>
+<td><p>no</p></td>
+<td><p>Directory, relative to <cite>CI_WORKSPACE</cite> (or absolute), that is to be packaged and zipped.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>CONTAINER_BUILD_DIRECTORY</cite></p></td>
+<td><p><cite>/build</cite></p></td>
+<td><p>no</p></td>
+<td><p>The directory within the container where the code is moved to, the pip install is done, and the code is zipped from. Shouldn’t need to be changed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>ARTIFACT_NAME</cite></p></td>
+<td><p><cite>deployment.zip</cite></p></td>
+<td><p>no</p></td>
+<td><p>Path and name of the zip file (or artifact) that will be outputted. Relative to <cite>CI_WORKSPACE</cite> (or absolute).</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>GLOB_IGNORE</cite></p></td>
+<td><p><cite>*.pyc,__pycache__</cite></p></td>
+<td><p>no</p></td>
+<td><p>Comma delimited glob expressions for files and folder to ignore while zipping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>CI_WORKSPACE</cite></p></td>
+<td><p><cite>$(pwd) - i.e. root level</cite></p></td>
+<td><p>no</p></td>
+<td><p>Workspace directory within the container.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>REQUIREMENTS_FILE</cite></p></td>
+<td><p><cite>requirements.txt</cite></p></td>
+<td><p>no</p></td>
+<td><p>Path relative to <cite>LAMBDA_CODE_DIR</cite> (or absolute) where the requirements file is. If not requirements file is found, it will attempt to use the setup.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>SETUP_FILE</cite></p></td>
+<td><p><cite>setup.py</cite></p></td>
+<td><p>no</p></td>
+<td><p>Path relative to <cite>LAMBDA_CODE_DIR</cite> (or absolute) where the setup.py file is.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>MAX_LAMBDA_SIZE_BYTES</cite></p></td>
+<td><p><cite>52428800</cite></p></td>
+<td><p>no</p></td>
+<td><p>Used for lambda size checking message. Should be an integer value which represents the maximum size of a lambda in bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>FAIL_ON_TOO_BIG</cite></p></td>
+<td><p><cite>False</cite></p></td>
+<td><p>no</p></td>
+<td><p>If set to <cite>True</cite>, the container will exit with a status code of <cite>1</cite> if the lambda is too big.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>SSH_FLIP</cite></p></td>
+<td><p><cite>False</cite></p></td>
+<td><p>no</p></td>
+<td><p>Only relevant if you are pip installing directly from a repo using <cite>ssh</cite> or <cite>https</cite>. If set to <cite>True</cite> and you are using a <cite>REQUIREMENTS_FILE</cite>, the container will check if it has access to <cite>ssh</cite>. If the container does not have access, then it will swap all requirements that use <cite>ssh</cite> to use <cite>https</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>Our code is in a directory named <cite>code</cite> and we have a <cite>reqs.txt</cite> file within that directory. We want <cite>deployment.zip</cite> to be at the root level of our project.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it --rm <span class="se">\</span>
+    -v <span class="k">$(if</span> <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">CURDIR</span><span class="si">}</span><span class="k">)</span>:/src <span class="se">\ </span><span class="c1"># First mount our project to the container</span>
+    -e <span class="nv">CI_WORKSPACE</span><span class="o">=</span>/src <span class="se">\ </span><span class="c1"># We will be working with /src</span>
+    -e <span class="nv">LAMBDA_CODE_DIR</span><span class="o">=</span>/code <span class="se">\ </span><span class="c1"># The code to be packaged is within /src/code</span>
+    -e <span class="nv">REQUIREMENTS_FILE</span><span class="o">=</span>reqs.txt <span class="se">\ </span><span class="c1"># Requirements are in /src/code/reqs.txt</span>
+    3mcloud/lambda-packager:python-latest
+</pre></div>
+</div>
+<p>Alternatively, lets say we only want to mount the <cite>code</cite> directory and not the entire root of our project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it --rm <span class="se">\</span>
+    -v <span class="k">$(if</span> <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">CURDIR</span><span class="si">}</span><span class="k">)</span>/code:/src <span class="se">\ </span><span class="c1"># First mount our code to the container</span>
+    -e <span class="nv">LAMBDA_CODE_DIR</span><span class="o">=</span>/src <span class="se">\ </span><span class="c1"># The code to be packaged is within /src (Note CI_WORKSPACE is /)</span>
+    -e <span class="nv">REQUIREMENTS_FILE</span><span class="o">=</span>reqs.txt <span class="se">\ </span><span class="c1"># Requirements are in /src/reqs.txt</span>
+    -e <span class="nv">ARTIFACT_NAME</span><span class="o">=</span>/src/deployment.zip <span class="se">\ </span><span class="c1"># We need to save the zip within /src/ since we didn&#39;t mount the root level.</span>
+    3mcloud/lambda-packager:python-latest
+</pre></div>
+</div>
+<p>Lasty, we can try to leverage the default values. Lets say all our code is within a <cite>src</cite> directory and within that <cite>src</cite> directory we have a <cite>requirements.txt</cite>. We want the output to be <cite>deployment.zip</cite> at the root of our project. Then all we need to do is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it --rm <span class="se">\</span>
+    -v <span class="k">$(if</span> <span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>,<span class="si">${</span><span class="nv">CURDIR</span><span class="si">}</span><span class="k">)</span>:/src <span class="se">\ </span><span class="c1"># First mount our code to the container</span>
+    3mcloud/lambda-packager:python-latest
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Python Lambda Packager Plugin User Guide</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#tl-dr">TL;DR</a></li>
+<li><a class="reference internal" href="#container-variables">Container Variables</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="usage.html"
+                          title="previous chapter">Lambda Packager User Guide</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="python_manifest.html"
+                          title="next chapter">Python Lambda Packager Manifest File</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/guides/user/python_packager.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="python_manifest.html" title="Python Lambda Packager Manifest File"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="Lambda Packager User Guide"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Lambda Packager  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="usage.html" >Lambda Packager User Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python Lambda Packager Plugin User Guide</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, 3M.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
