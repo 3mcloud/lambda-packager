@@ -23,3 +23,9 @@ test:
 		-w /test \
 		-v $(if ${PWD},${PWD},${CURDIR})/$(RUNTIME):/test \
 		$(IMAGE_NAME):$(RUNTIME)-$(VERSION) /bin/sh -c "rm -rf *.zip && chmod +x ./test.sh && ./test.sh"
+
+docs:
+	rm -rdf _docs/
+	sphinx-build -aE -v -b html docs _docs
+
+.PHONY: docs
