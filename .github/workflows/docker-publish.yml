@@ -179,7 +179,7 @@ jobs:
           python-version: 3.8
 
       - name: Install Dependencies
-        run: pip install -r requirements-docs.pip
+        run: pip install -r docs/requirements-docs.pip
 
       - name: Build Docs
         run: make docs
