@@ -205,28 +205,3 @@ jobs:
         docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
 
-  Github-Pages:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install Dependencies
-        run: pip install -r docs/requirements-docs.pip
-
-      - name: Build Docs
-        run: make docs
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3.6.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _docs
