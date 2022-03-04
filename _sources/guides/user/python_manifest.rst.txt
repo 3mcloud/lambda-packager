@@ -1,3 +1,5 @@
+.. _python-manifest:
+
 Python Lambda Packager Manifest File
 ========================================
 

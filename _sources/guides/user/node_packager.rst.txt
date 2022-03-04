@@ -1,5 +1,7 @@
-Node Lambda Packager Plugin User Guide
-========================================
+.. _node-packager:
+
+Node Lambda Packager User Guide
+==================================
 
 The Lambda Packager Plugin is an AWS Docker container that is used to package lambda zip files for deployment.
 
@@ -46,9 +48,7 @@ You can change the default behavior of this packager by using the environment va
 Examples
 ##########
 
-See Examples :ref: `Python Lambda Packager Plugin User Guide`
-
-See the `Examples for Python <python_packager.html#examples>`_, except where you see `3mcloud/lambda-packager:python-latest` replace that
+See the `Examples` in the :ref:`python-packager`, except where you see `3mcloud/lambda-packager:python-latest` replace that
 with `3mcloud/lambda-packager:node-12.22`.
 
 The default behavior of the node packager is to assume that the `package.json` and `package-lock.json`

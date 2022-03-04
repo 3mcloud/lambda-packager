@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Python Lambda Packager Plugin User Guide &#8212; Lambda Packager  documentation</title>
+    <title>Python Lambda Packager User Guide &#8212; Lambda Packager  documentation</title>
     
     <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -118,7 +118,7 @@
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Python Lambda Packager Plugin User Guide
+   Python Lambda Packager User Guide
   </a>
  </li>
  <li class="toctree-l1">
@@ -128,7 +128,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="node_packager.html">
-   Node Lambda Packager Plugin User Guide
+   Node Lambda Packager User Guide
   </a>
  </li>
 </ul>
@@ -197,8 +197,8 @@
               
               <div>
                 
-  <section id="python-lambda-packager-plugin-user-guide">
-<h1>Python Lambda Packager Plugin User Guide<a class="headerlink" href="#python-lambda-packager-plugin-user-guide" title="Permalink to this headline">¶</a></h1>
+  <section id="python-lambda-packager-user-guide">
+<span id="python-packager"></span><h1>Python Lambda Packager User Guide<a class="headerlink" href="#python-lambda-packager-user-guide" title="Permalink to this headline">¶</a></h1>
 <p>The Lambda Packager Plugin is an AWS Docker container that is used to package lambda zip files for deployment.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -241,7 +241,7 @@
 <tr class="row-even"><td><p><cite>MANIFEST_FILE</cite></p></td>
 <td><p>` `</p></td>
 <td><p>no</p></td>
-<td><p>If you only want to package a single lambda, ignore this environment variable, else see <a class="reference external" href="python_manifest.html">Manifest File</a>. This is the path, relative to <cite>CI_WORKSPACE</cite> or absolute, to the manifest file. Empty (default) if you don’t want to use it.</p></td>
+<td><p>If you only want to package a single lambda, ignore this environment variable, else see the <a class="reference internal" href="python_manifest.html#python-manifest"><span class="std std-ref">Python Lambda Packager Manifest File</span></a>. This is the path, relative to <cite>CI_WORKSPACE</cite> or absolute, to the manifest file. Empty (default) if you don’t want to use it.</p></td>
 </tr>
 <tr class="row-odd"><td><p><cite>LAMBDA_CODE_DIR</cite></p></td>
 <td><p><cite>./src</cite></p></td>
