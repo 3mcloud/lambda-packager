@@ -194,7 +194,7 @@ def test_simple_with_reqs_txt_flip_ssh(lambda_paths, environments, context_modif
             entrypoint.create_single_artifact()
         assert pytest_wrapped_e.type == SystemExit
         # The zip will fail because the ssh/https url won't actually work.
-        assert 'exit status 128: git clone --filter=blob:none -q https' in caplog.text
+        assert 'exit status 128: git clone --filter=blob:none -q https' in caplog.text or ('git clone --filter=blob:none --quiet https' in caplog.text and 'exit code: 128' in caplog.text)
         assert pytest_wrapped_e.value.code == 1
 
 def test_simple_with_reqs_txt_flip_ssh_no_ssh(lambda_paths, environments, context_modified_environ,
