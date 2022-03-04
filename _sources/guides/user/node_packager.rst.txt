@@ -67,23 +67,23 @@ Some projects, however, have a nested structure. If you have a folder structure 
     .
     ├── README.md
     ├── __tests__
-    │   └── unit
-    │       └── handlers
-    │           ├── get-all-items.test.js
-    │           ├── get-by-id.test.js
-    │           └── put-item.test.js
+    │   └── unit
+    │       └── handlers
+    │           ├── get-all-items.test.js
+    │           ├── get-by-id.test.js
+    │           └── put-item.test.js
     ├── buildspec.yml
     ├── env.json
     ├── events
-    │   ├── event-get-all-items.json
-    │   ├── event-get-by-id.json
-    │   └── event-post-item.json
+    │   ├── event-get-all-items.json
+    │   ├── event-get-by-id.json
+    │   └── event-post-item.json
     ├── package.json
     ├── src
-    │   └── handlers
-    │       ├── get-all-items.js
-    │       ├── get-by-id.js
-    │       └── put-item.js
+    │   └── handlers
+    │       ├── get-all-items.js
+    │       ├── get-by-id.js
+    │       └── put-item.js
     └── template.yml
 
 And you want a package that looks like this on the inside:
