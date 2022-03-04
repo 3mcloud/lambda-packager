@@ -1,5 +1,3 @@
-.. _python-packager:
-
 Python Lambda Packager User Guide
 ====================================
 
@@ -43,7 +41,7 @@ You can change the default behavior of this packager by using the environment va
     :header: "Variable Name", "Default", "Required", "Description"
     :widths: 15, 10, 10, 30
 
-    "`MANIFEST_FILE`", "` `", "no", "If you only want to package a single lambda, ignore this environment variable, else see the :ref:`python-manifest`. This is the path, relative to `CI_WORKSPACE` or absolute, to the manifest file. Empty (default) if you don't want to use it."
+    "`MANIFEST_FILE`", "` `", "no", "If you only want to package a single lambda, ignore this environment variable, else see `Python Manifest File`. This is the path, relative to `CI_WORKSPACE` or absolute, to the manifest file. Empty (default) if you don't want to use it."
     "`LAMBDA_CODE_DIR`", "`./src`", "no", "Directory, relative to `CI_WORKSPACE` (or absolute), that is to be packaged and zipped."
     "`CONTAINER_BUILD_DIRECTORY`", "`/build`", "no", "The directory within the container where the code is moved to, the pip install is done, and the code is zipped from. Shouldn't need to be changed."
     "`ARTIFACT_NAME`", "`deployment.zip`", "no", "Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE` (or absolute)."
