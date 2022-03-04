@@ -8,6 +8,8 @@ Usage
 
 This plugin's github repository can be found here - `lambda-packager <https://github.com/3mcloud/lambda-packager>`_.
 
+This guide demonstrates how to use the lambda-packager plugin to package Node lambda functions.
+
 TL;DR
 ########
 
@@ -44,7 +46,7 @@ You can change the default behavior of this packager by using the environment va
 Examples
 ##########
 
-See the `Examples` for Python, except where you see `3mcloud/lambda-packager:python-latest` replace that
+See the `Examples for Python <python_packager.html#examples>`_, except where you see `3mcloud/lambda-packager:python-latest` replace that
 with `3mcloud/lambda-packager:node-12.22`.
 
 The default behavior of the node packager is to assume that the `package.json` and `package-lock.json`
