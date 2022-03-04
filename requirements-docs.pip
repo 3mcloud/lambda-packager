@@ -1,0 +1,4 @@
+recommonmark>=0.7.1
+sphinx-autodoc-typehints>=1.16.0
+sphinx>=4.4.0
+pydata_sphinx_theme

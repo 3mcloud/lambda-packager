@@ -1,5 +1,5 @@
-Node Lambda Packager Plugin User Guide
-========================================
+Node Lambda Packager User Guide
+==================================
 
 The Lambda Packager Plugin is an AWS Docker container that is used to package lambda zip files for deployment.
 
@@ -7,6 +7,8 @@ Usage
 ******
 
 This plugin's github repository can be found here - `lambda-packager <https://github.com/3mcloud/lambda-packager>`_.
+
+This guide documents how to use the lambda-packager plugin to package Node lambda functions.
 
 TL;DR
 ########
@@ -44,7 +46,7 @@ You can change the default behavior of this packager by using the environment va
 Examples
 ##########
 
-See the `Examples` for Python, except where you see `3mcloud/lambda-packager:python-latest` replace that
+See the `Python Packager Examples`, except where you see `3mcloud/lambda-packager:python-latest` replace that
 with `3mcloud/lambda-packager:node-12.22`.
 
 The default behavior of the node packager is to assume that the `package.json` and `package-lock.json`
@@ -65,23 +67,23 @@ Some projects, however, have a nested structure. If you have a folder structure 
     .
     ├── README.md
     ├── __tests__
-    │   └── unit
-    │       └── handlers
-    │           ├── get-all-items.test.js
-    │           ├── get-by-id.test.js
-    │           └── put-item.test.js
+    │   └── unit
+    │       └── handlers
+    │           ├── get-all-items.test.js
+    │           ├── get-by-id.test.js
+    │           └── put-item.test.js
     ├── buildspec.yml
     ├── env.json
     ├── events
-    │   ├── event-get-all-items.json
-    │   ├── event-get-by-id.json
-    │   └── event-post-item.json
+    │   ├── event-get-all-items.json
+    │   ├── event-get-by-id.json
+    │   └── event-post-item.json
     ├── package.json
     ├── src
-    │   └── handlers
-    │       ├── get-all-items.js
-    │       ├── get-by-id.js
-    │       └── put-item.js
+    │   └── handlers
+    │       ├── get-all-items.js
+    │       ├── get-by-id.js
+    │       └── put-item.js
     └── template.yml
 
 And you want a package that looks like this on the inside:

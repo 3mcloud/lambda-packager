@@ -1,4 +1,0 @@
-recommonmark>=0.7.1
-sphinx_mmm_material @ git+ssh://git@github.mmm.com/MMM/sphinx-mmm-material.git@master
-sphinx-autodoc-typehints>=1.16.0
-sphinx>=4.4.0

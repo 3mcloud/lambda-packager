@@ -1,5 +1,5 @@
-Python Lambda Packager Plugin User Guide
-=========================================
+Python Lambda Packager User Guide
+====================================
 
 The Lambda Packager Plugin is an AWS Docker container that is used to package lambda zip files for deployment.
 
@@ -7,6 +7,8 @@ Usage
 ******
 
 This plugin's github repository can be found here - `lambda-packager <https://github.com/3mcloud/lambda-packager>`_.
+
+This guide documents how to use the lambda-packager plugin to package Python lambda functions.
 
 TL;DR
 ########
@@ -39,7 +41,7 @@ You can change the default behavior of this packager by using the environment va
     :header: "Variable Name", "Default", "Required", "Description"
     :widths: 15, 10, 10, 30
 
-    "`MANIFEST_FILE`", "` `", "no", "If you only want to package a single lambda, ignore this environment variable, else see `Manifest File <python_manifest.html>`_. This is the path, relative to `CI_WORKSPACE` or absolute, to the manifest file. Empty (default) if you don't want to use it."
+    "`MANIFEST_FILE`", "` `", "no", "If you only want to package a single lambda, ignore this environment variable, else see `Python Manifest File`. This is the path, relative to `CI_WORKSPACE` or absolute, to the manifest file. Empty (default) if you don't want to use it."
     "`LAMBDA_CODE_DIR`", "`./src`", "no", "Directory, relative to `CI_WORKSPACE` (or absolute), that is to be packaged and zipped."
     "`CONTAINER_BUILD_DIRECTORY`", "`/build`", "no", "The directory within the container where the code is moved to, the pip install is done, and the code is zipped from. Shouldn't need to be changed."
     "`ARTIFACT_NAME`", "`deployment.zip`", "no", "Path and name of the zip file (or artifact) that will be outputted. Relative to `CI_WORKSPACE` (or absolute)."
@@ -77,7 +79,7 @@ Alternatively, lets say we only want to mount the `code` directory and not the e
         -e ARTIFACT_NAME=/src/deployment.zip \ # We need to save the zip within /src/ since we didn't mount the root level.
         3mcloud/lambda-packager:python-latest
 
-Lasty, we can try to leverage the default values. Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
+Lastly, we can try to leverage the default values. Lets say all our code is within a `src` directory and within that `src` directory we have a `requirements.txt`. We want the output to be `deployment.zip` at the root of our project. Then all we need to do is:
 
 .. code-block:: bash
 

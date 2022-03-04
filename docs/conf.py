@@ -63,13 +63,10 @@ source_suffix = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-html_theme = 'sphinx_mmm_material'
+html_theme = 'pydata_sphinx_theme'
 
-# 3M Sphinx theme options (see theme.conf for more information)
 html_theme_options = {
-    # Set the name of the project to appear in the sidebar
-    'repo_url': 'https://github.com/3mcloud/lambda-packager',
-    'repo_name': 'lambda-packager',
+    'github_url': 'https://github.com/3mcloud/lambda-packager',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

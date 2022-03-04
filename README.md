@@ -12,7 +12,7 @@
 - [`node-12.22`](https://github.com/3mcloud/lambda-packager/blob/master/node/12.22/Dockerfile)
 
 For how to use the packager for Python see:
-[Python Packager Documentation](./documentation/python_packager.md)
+[Python Packager Documentation](./docs/guides/user/python_packager.rst)
 
 For how to use the packager for Node see:
-[Node Packager Documentation](./documentation/node_packager.md)
+[Node Packager Documentation](./docs/guides/user/node_packager.rst)
