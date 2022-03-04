@@ -8,7 +8,7 @@ Usage
 
 This plugin's github repository can be found here - `lambda-packager <https://github.com/3mcloud/lambda-packager>`_.
 
-This guide demonstrates how to use the lambda-packager plugin to package Node lambda functions.
+This guide documents how to use the lambda-packager plugin to package Node lambda functions.
 
 TL;DR
 ########
