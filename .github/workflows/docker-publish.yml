@@ -165,7 +165,7 @@ jobs:
         docker image push --all-tags $IMAGE_ID
 
   Github-Pages:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
