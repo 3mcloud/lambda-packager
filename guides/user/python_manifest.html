@@ -199,42 +199,42 @@
 <p>To allow for the packager to package several different lambdas at once, we leverage a manifest file. The name of the file is unimportant, but the schema of the file is defined below. The file should be a <cite>.yml</cite>, <cite>.yaml</cite>, or <cite>.json</cite> file.</p>
 <section id="spec">
 <h3>Spec<a class="headerlink" href="#spec" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lambda-packager</span><span class="w"></span>
-<span class="linenos">2</span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="c1"># The version of the spec to use. Currently only `1.0.0`.</span><span class="w"></span>
-<span class="linenos">3</span><span class="nt">lambdas</span><span class="p">:</span><span class="w"> </span><span class="c1"># List of lambdas to package</span><span class="w"></span>
-<span class="linenos">4</span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_to_cell</span><span class="w"> </span><span class="c1"># Build name, only used to keep builds independent. Must be unique</span><span class="w"></span>
-<span class="linenos">5</span><span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">6</span><span class="w">    </span><span class="c1"># Any environment variable supported with the Python Packager documentation</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lambda-packager</span><span class="w"></span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="c1"># The version of the spec to use. Currently only `1.0.0`.</span><span class="w"></span>
+<span class="nt">lambdas</span><span class="p">:</span><span class="w"> </span><span class="c1"># List of lambdas to package</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_to_cell</span><span class="w"> </span><span class="c1"># Build name, only used to keep builds independent. Must be unique</span><span class="w"></span>
+<span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Any environment variable supported with the Python Packager documentation</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nn">---</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lambda-packager</span><span class="w"></span>
-<span class="linenos"> 3</span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w"> </span><span class="c1"># Manifest file version</span><span class="w"></span>
-<span class="linenos"> 4</span><span class="nt">lambdas</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 5</span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_to_cell</span><span class="w"> </span><span class="c1"># This is just used for building, it does not effect the artifact file.</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
-<span class="linenos"> 7</span><span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_processor_objects/add_to_cell</span><span class="w"></span>
-<span class="linenos"> 8</span><span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
-<span class="linenos"> 9</span><span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">po_add_to_cell.zip</span><span class="w"></span>
-<span class="linenos">10</span><span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"> </span><span class="c1"># Boolean or String is fine.</span><span class="w"></span>
-<span class="linenos">11</span><span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="linenos">12</span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_cell</span><span class="w"></span>
-<span class="linenos">13</span><span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">14</span><span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_processor_objects/extract_cell</span><span class="w"></span>
-<span class="linenos">15</span><span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
-<span class="linenos">16</span><span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">po_extract_cell.zip</span><span class="w"></span>
-<span class="linenos">17</span><span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="linenos">18</span><span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="linenos">19</span><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mock_file_writer</span><span class="w"></span>
-<span class="linenos">20</span><span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
-<span class="linenos">21</span><span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_file_writer</span><span class="w"></span>
-<span class="linenos">22</span><span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
-<span class="linenos">23</span><span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mock_file_writer.zip</span><span class="w"></span>
-<span class="linenos">24</span><span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
-<span class="linenos">25</span><span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lambda-packager</span><span class="w"></span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span><span class="w"> </span><span class="c1"># Manifest file version</span><span class="w"></span>
+<span class="nt">lambdas</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_to_cell</span><span class="w"> </span><span class="c1"># This is just used for building, it does not effect the artifact file.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_processor_objects/add_to_cell</span><span class="w"></span>
+<span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">po_add_to_cell.zip</span><span class="w"></span>
+<span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"> </span><span class="c1"># Boolean or String is fine.</span><span class="w"></span>
+<span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extract_cell</span><span class="w"></span>
+<span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_processor_objects/extract_cell</span><span class="w"></span>
+<span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">po_extract_cell.zip</span><span class="w"></span>
+<span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mock_file_writer</span><span class="w"></span>
+<span class="w">    </span><span class="nt">environment_overrides</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">LAMBDA_CODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./lambdas/mock_file_writer</span><span class="w"></span>
+<span class="w">      </span><span class="nt">REQUIREMENTS_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./requirements.txt</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ARTIFACT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mock_file_writer.zip</span><span class="w"></span>
+<span class="w">      </span><span class="nt">FAIL_ON_TOO_BIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">      </span><span class="nt">SSH_FLIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

@@ -10,7 +10,6 @@ Spec
 ######
 
 .. code-block:: yaml
-    :linenos:
 
     kind: lambda-packager
     version: # The version of the spec to use. Currently only `1.0.0`.
@@ -23,7 +22,6 @@ Example
 #########
 
 .. code-block:: yaml
-    :linenos:
 
     ---
     kind: lambda-packager
