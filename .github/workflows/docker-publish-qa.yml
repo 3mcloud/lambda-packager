@@ -205,7 +205,7 @@ jobs:
         docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
 
-Github-Pages:
+  Github-Pages:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the code
