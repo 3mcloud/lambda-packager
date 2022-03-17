@@ -387,19 +387,21 @@ def zip_directory(variables: dict) -> Set[int]:
             zip_size / BYTES_PER_MB,
             variables['max_lambda_size'] / BYTES_PER_MB
         )
+
+        if variables['fail_on_too_big'] and zip_size > variables['max_lambda_size']:
+            LOGGER.info(
+                "\n==========================================================================\n"
+                "ERROR - Lambda: %s is to big to fit in a lambda. \n"
+                "Please remove some packages.\n"
+                "Current size: %sB - Max Size: %sB\n"
+                "==========================================================================\n",
+                split(variables['artifact_path'])[1], zip_size, variables['max_lambda_size'])
+            error_codes.add(1)
+
     except Exception: # pylint: disable=broad-except
         LOGGER.exception("Zipping package failed:")
         error_codes.add(1)
 
-    if variables['fail_on_too_big'] and zip_size > variables['max_lambda_size']:
-        LOGGER.info(
-            "\n==========================================================================\n"
-            "ERROR - Lambda: %s is to big to fit in a lambda. \n"
-            "Please remove some packages.\n"
-            "Current size: %sB - Max Size: %sB\n"
-            "==========================================================================\n",
-            split(variables['artifact_path'])[1], zip_size, variables['max_lambda_size'])
-        error_codes.add(1)
 
     return error_codes
 
