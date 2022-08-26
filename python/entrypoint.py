@@ -15,7 +15,7 @@ from shutil import which
 from typing import Set
 from pathlib import Path
 from os.path import join, split
-from ast import literal_eval
+from distutils.util import strtobool
 from functools import lru_cache
 from multiprocessing import Process
 
@@ -118,10 +118,10 @@ def extract_container_variables(container_vars: dict) -> dict:
         "max_lambda_size": int(
             container_vars.get('MAX_LAMBDA_SIZE_BYTES', defaults['DEFAULT_MAX_LAMBDA_SIZE'])
         ),
-        "fail_on_too_big": literal_eval(str(
+        "fail_on_too_big": (1 == strtobool(str(
             container_vars.get('FAIL_ON_TOO_BIG', defaults['DEFAULT_FAIL_ON_TOO_BIG'])
-        )),
-        "ssh_flip": literal_eval(str(container_vars.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP']))),
+        ))),
+        "ssh_flip": (1 == strtobool(str(container_vars.get('SSH_FLIP', defaults['DEFAULT_SSH_FLIP'])))),
     }
 
     return container_variables
