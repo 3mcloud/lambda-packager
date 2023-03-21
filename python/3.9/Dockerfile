@@ -12,6 +12,7 @@ RUN yum -y groupinstall "Development Tools" \
     libressl-dev \
     openssl-devel \
     postgresql-dev \
+    postgresql-devel \
     sqlite-devel \
     wget \
     which \
