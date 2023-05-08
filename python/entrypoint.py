@@ -460,7 +460,9 @@ def create_multiple_artifacts(manifest_file_path: str):
     try:
         processes = list()
         for lambda_spec in manifest_object['lambdas']:
-            variables = extract_container_variables(lambda_spec['environment_overrides'])
+            base_variables = os.environ
+            base_variables.update(lambda_spec['environment_overrides'])
+            variables = extract_container_variables(base_variables)
             variables['build_name'] = lambda_spec['name']
             return_codes = set()
             process_pointer = Process(
