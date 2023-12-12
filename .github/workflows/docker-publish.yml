@@ -11,7 +11,10 @@ env:
   ORG: 3mcloud
 
 jobs:
-  build-python37:
+  build-python:
+    strategy:
+      matrix:
+        version: [3.8, 3.9, 3.10, 3.11]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
@@ -23,9 +26,9 @@ jobs:
         name: 3mcloud/lambda-packager
         username: ${{ secrets.DOCKERHUBUSER }}
         password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.7"
+        tags: "latest,python-latest,python-${{ matrix.version }}"
         context: python/.
-        dockerfile: python/3.7/Dockerfile
+        dockerfile: python/${{ matrix.version }}/Dockerfile
 
     - name: login-to-ghcr
       run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
@@ -33,137 +36,9 @@ jobs:
     - name: push-to-ghcr
       run: |
         IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.7 ${IMAGE_ID}:python-3.7
-        docker image push --all-tags $IMAGE_ID
-
-  build-python38:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "python-3.8"
-        context: python/.
-        dockerfile: python/3.8/Dockerfile
-
-    - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
-
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.8 ${IMAGE_ID}:python-3.8
-        docker image push --all-tags $IMAGE_ID
-
-  build-python39:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-latest,python-3.9"
-        context: python/.
-        dockerfile: python/3.9/Dockerfile
-
-    - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
-
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.9 ${IMAGE_ID}:python-3.9
-        docker image push --all-tags $IMAGE_ID
-
-
-  build-python310:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-latest,python-3.10"
-        context: python/.
-        dockerfile: python/3.10/Dockerfile
-
-    - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
-
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.10 ${IMAGE_ID}:python-3.10
-        docker image push --all-tags $IMAGE_ID
-
-
-  build-python311:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-latest,python-3.11"
-        context: python/.
-        dockerfile: python/3.11/Dockerfile
-
-    - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
-
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.11 ${IMAGE_ID}:python-3.11
-        docker image push --all-tags $IMAGE_ID
-
-
-  build-python312:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: push
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: 3mcloud/lambda-packager
-        username: ${{ secrets.DOCKERHUBUSER }}
-        password: ${{ secrets.DOCKERHUBPASS }}
-        tags: "latest,python-latest,python-3.12"
-        context: python/.
-        dockerfile: python/3.12/Dockerfile
-
-    - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
-
-    - name: push-to-ghcr
-      run: |
-        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
-        docker image tag ${IMAGE_NAME}:python-3.12 ${IMAGE_ID}:python-3.12
-        docker image tag ${IMAGE_NAME}:python-3.12 ${IMAGE_ID}:latest
-        docker image tag ${IMAGE_NAME}:python-3.12 ${IMAGE_ID}:python-latest
+        docker image tag ${IMAGE_NAME}:python-${{ matrix.version }} ${IMAGE_ID}:python-${{ matrix.version }}
+        docker image tag ${IMAGE_NAME}:python-${{ matrix.version }} ${IMAGE_ID}:latest
+        docker image tag ${IMAGE_NAME}:python-${{ matrix.version }} ${IMAGE_ID}:python-latest
         docker image push --all-tags $IMAGE_ID
 
 
