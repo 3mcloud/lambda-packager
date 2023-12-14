@@ -31,7 +31,7 @@ jobs:
         dockerfile: python/${{ matrix.version }}/Dockerfile
 
     - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
       run: |
@@ -59,7 +59,7 @@ jobs:
         dockerfile: node/14.18/Dockerfile
 
     - name: login-to-ghcr
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
       run: |

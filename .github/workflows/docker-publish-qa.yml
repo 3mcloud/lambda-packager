@@ -39,7 +39,7 @@ jobs:
 
     - name: login-to-ghcr
       if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
       run: |
@@ -71,7 +71,7 @@ jobs:
 
     - name: login-to-ghcr
       if: steps.build_test.outcome == 'success'
-      run: echo "${{ secrets.PACKAGETOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
     - name: push-to-ghcr
       run: |
