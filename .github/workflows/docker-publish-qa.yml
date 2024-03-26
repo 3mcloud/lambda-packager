@@ -79,3 +79,67 @@ jobs:
         docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:qa-node-14.18
         docker image tag ${IMAGE_NAME}:node-14.18 ${IMAGE_ID}:node-14.18-${{ github.sha }}
         docker image push --all-tags $IMAGE_ID
+
+  build-node16x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Build and test node 16.x
+      id: build_test
+      run: make test VERSION=16.16 RUNTIME=node
+
+    - name: push
+      if: steps.build_test.outcome == 'success'
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "node-16.16-qa,node-16.16-${{ github.sha }}"
+        context: node/.
+        dockerfile: node/16.16/Dockerfile
+
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:node-16.16 ${IMAGE_ID}:qa-node-16.16
+        docker image tag ${IMAGE_NAME}:node-16.16 ${IMAGE_ID}:node-16.16-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
+
+  build-node20x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Build and test node 20.x
+      id: build_test
+      run: make test VERSION=20.11 RUNTIME=node
+
+    - name: push
+      if: steps.build_test.outcome == 'success'
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: 3mcloud/lambda-packager
+        username: ${{ secrets.DOCKERHUBUSER }}
+        password: ${{ secrets.DOCKERHUBPASS }}
+        tags: "node-20.11-qa,node-20.11-${{ github.sha }}"
+        context: node/.
+        dockerfile: node/20.11/Dockerfile
+
+    - name: login-to-ghcr
+      if: steps.build_test.outcome == 'success'
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+
+    - name: push-to-ghcr
+      run: |
+        IMAGE_ID=${REGISTRY}/${IMAGE_NAME}
+        docker image tag ${IMAGE_NAME}:node-20.11 ${IMAGE_ID}:qa-node-20.11
+        docker image tag ${IMAGE_NAME}:node-20.11 ${IMAGE_ID}:node-20.11-${{ github.sha }}
+        docker image push --all-tags $IMAGE_ID
